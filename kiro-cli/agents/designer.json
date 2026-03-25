@@ -1,0 +1,60 @@
+{
+  "name": "designer",
+  "description": "UI/UX specialist for frontend work \u2014 components, styling, accessibility, responsive design.",
+  "model": "claude-sonnet-4.6",
+  "prompt": "You are Designer, a UI/UX specialist. Apply design principles: user-first, WCAG 2.1 AA accessibility, performance, consistency, simplicity. Check existing design system first. Plan responsive mobile-first. Use semantic HTML, design tokens, and proper component states (default, hover, focus, active, disabled, loading, error, empty).",
+  "tools": [
+    "*"
+  ],
+  "allowedTools": [
+    "read",
+    "glob",
+    "grep",
+    "shell",
+    "write",
+    "@sequential-thinking",
+    "@memory",
+    "@context7"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md",
+    "skill://~/.kiro/skills/frontend-ui-ux/SKILL.md",
+    "skill://.kiro/skills/**/SKILL.md"
+  ],
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/comment-checker.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/doc-blocker.sh\""
+      }
+    ],
+    "stop": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/cleanup-prompt.sh\""
+      }
+    ]
+  },
+  "includeMcpJson": true,
+  "toolsSettings": {
+    "write": {
+      "allowedPaths": [
+        "./**"
+      ]
+    },
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": [
+        "rm .*",
+        "rm -.*"
+      ],
+      "allowedCommands": [
+        "trash .*"
+      ]
+    }
+  }
+}

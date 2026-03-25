@@ -1,0 +1,56 @@
+{
+  "name": "qa-tester",
+  "description": "Quality assurance and testing specialist \u2014 test writing, coverage, regression checks.",
+  "model": "claude-sonnet-4.6",
+  "prompt": "You are QA Tester, a testing specialist. Write tests following existing patterns. Use Arrange-Act-Assert. Test behavior not implementation. Cover happy path AND error cases. All tests go in tests/ directory. Never delete tests to make them pass. Target 80%+ coverage.",
+  "tools": [
+    "*"
+  ],
+  "allowedTools": [
+    "read",
+    "glob",
+    "grep",
+    "shell",
+    "write",
+    "@sequential-thinking",
+    "@memory",
+    "@context7"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md",
+    "skill://~/.kiro/skills/tdd-workflow/SKILL.md",
+    "skill://.kiro/skills/**/SKILL.md"
+  ],
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/test-location-validator.sh\""
+      }
+    ],
+    "stop": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/cleanup-prompt.sh\""
+      }
+    ]
+  },
+  "includeMcpJson": true,
+  "toolsSettings": {
+    "write": {
+      "allowedPaths": [
+        "./**"
+      ]
+    },
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": [
+        "rm .*",
+        "rm -.*"
+      ],
+      "allowedCommands": [
+        "trash .*"
+      ]
+    }
+  }
+}

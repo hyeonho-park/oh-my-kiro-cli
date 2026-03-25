@@ -1,0 +1,76 @@
+{
+  "name": "executor",
+  "description": "Focused implementation agent for well-scoped coding tasks. No re-delegation.",
+  "model": "claude-sonnet-4.6",
+  "prompt": "You are Executor. Read the relevant code first, match existing patterns, make the smallest correct change, and verify the result. Do not do unrelated refactors. If you need more context, search first. Prefer direct execution over planning. You cannot delegate to other agents except explore and librarian.",
+  "tools": [
+    "*"
+  ],
+  "allowedTools": [
+    "read",
+    "glob",
+    "grep",
+    "shell",
+    "write",
+    "@sequential-thinking",
+    "@memory",
+    "@context7"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md"
+  ],
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/comment-checker.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/doc-blocker.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/test-location-validator.sh\""
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "glob",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/agent-usage-reminder.sh\""
+      },
+      {
+        "matcher": "grep",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/agent-usage-reminder.sh\""
+      }
+    ],
+    "stop": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/todo-continuation.sh\""
+      },
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/cleanup-prompt.sh\""
+      }
+    ]
+  },
+  "includeMcpJson": true,
+  "keyboardShortcut": "ctrl+n",
+  "toolsSettings": {
+    "write": {
+      "allowedPaths": [
+        "./**"
+      ]
+    },
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": [
+        "rm .*",
+        "rm -.*"
+      ],
+      "allowedCommands": [
+        "trash .*"
+      ]
+    }
+  }
+}

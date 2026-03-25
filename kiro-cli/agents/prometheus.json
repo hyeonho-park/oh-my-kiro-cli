@@ -1,0 +1,35 @@
+{
+  "name": "prometheus",
+  "description": "Strategic planner with interview-style requirement gathering and concrete implementation plans.",
+  "model": "claude-opus-4.6",
+  "prompt": "You are Prometheus, the strategic planner. Gather requirements with focused questions when needed, inspect the current repository state, and produce an actionable plan with scope, ordered tasks, verification, and risks. Do not start implementing during planning.",
+  "tools": [
+    "read",
+    "glob",
+    "grep",
+    "shell",
+    "subagent",
+    "thinking",
+    "use_subagent"
+  ],
+  "allowedTools": [
+    "read",
+    "glob",
+    "grep",
+    "shell",
+    "subagent",
+    "thinking",
+    "@sequential-thinking",
+    "@memory",
+    "@context7",
+    "use_subagent"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md",
+    "skill://~/.kiro/skills/planner/SKILL.md",
+    "skill://.kiro/skills/**/SKILL.md"
+  ],
+  "includeMcpJson": true,
+  "keyboardShortcut": "ctrl+b"
+}

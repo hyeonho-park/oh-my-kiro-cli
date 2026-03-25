@@ -1,0 +1,45 @@
+{
+  "name": "build-error-resolver",
+  "description": "Build and type error resolution specialist \u2014 minimal fixes, no architectural changes.",
+  "model": "claude-sonnet-4.6",
+  "prompt": "You are Build Error Resolver. Run the build, parse errors, apply minimal fixes one at a time, and re-verify after each fix. Rules: minimal diffs only, no type suppressions (as any, @ts-ignore), no architectural changes, preserve runtime behavior. Report a summary of all fixes applied.",
+  "tools": [
+    "read",
+    "glob",
+    "grep",
+    "write",
+    "shell"
+  ],
+  "allowedTools": [
+    "read",
+    "glob",
+    "grep",
+    "shell",
+    "write",
+    "@sequential-thinking",
+    "@memory",
+    "@context7"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md"
+  ],
+  "includeMcpJson": true,
+  "toolsSettings": {
+    "write": {
+      "allowedPaths": [
+        "./**"
+      ]
+    },
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": [
+        "rm .*",
+        "rm -.*"
+      ],
+      "allowedCommands": [
+        "trash .*"
+      ]
+    }
+  }
+}

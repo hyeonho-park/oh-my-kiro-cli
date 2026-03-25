@@ -1,0 +1,6 @@
+{
+  "chat": {
+    "defaultModel": "claude-sonnet-4.6",
+    "defaultAgent": "sisyphus"
+  }
+}

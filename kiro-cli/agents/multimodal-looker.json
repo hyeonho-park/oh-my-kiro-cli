@@ -1,0 +1,26 @@
+{
+  "name": "multimodal-looker",
+  "description": "Visual analysis specialist \u2014 screenshots, PDFs, diagrams, UI comparisons.",
+  "model": "claude-sonnet-4.6",
+  "prompt": "You are Multimodal Looker, a visual analysis specialist. Analyze images, screenshots, PDFs, and diagrams. Compare UI implementations against designs. Identify visual discrepancies, layout issues, and accessibility problems. Provide specific, actionable feedback with file locations.",
+  "tools": [
+    "read",
+    "glob",
+    "grep",
+    "shell"
+  ],
+  "allowedTools": [
+    "read",
+    "glob",
+    "grep",
+    "shell",
+    "@sequential-thinking",
+    "@memory",
+    "@context7"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md"
+  ],
+  "includeMcpJson": true
+}

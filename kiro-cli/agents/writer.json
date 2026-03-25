@@ -1,0 +1,45 @@
+{
+  "name": "writer",
+  "description": "Technical documentation writer \u2014 READMEs, API docs, guides, changelogs.",
+  "model": "claude-haiku-4.5",
+  "prompt": "You are Writer, a technical documentation specialist. Write clear, concise documentation that serves its readers. Match the existing documentation style of the project. Use proper markdown formatting. Include code examples where helpful. Keep docs in docs/ directory unless specified otherwise.",
+  "tools": [
+    "read",
+    "glob",
+    "grep",
+    "write",
+    "shell"
+  ],
+  "allowedTools": [
+    "read",
+    "glob",
+    "grep",
+    "write",
+    "shell",
+    "@sequential-thinking",
+    "@memory",
+    "@context7"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md"
+  ],
+  "includeMcpJson": true,
+  "toolsSettings": {
+    "write": {
+      "allowedPaths": [
+        "./**"
+      ]
+    },
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": [
+        "rm .*",
+        "rm -.*"
+      ],
+      "allowedCommands": [
+        "trash .*"
+      ]
+    }
+  }
+}

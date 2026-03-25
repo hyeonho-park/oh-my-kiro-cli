@@ -1,0 +1,77 @@
+{
+  "name": "sisyphus",
+  "description": "Main orchestrator \u2014 delegates ALL work to specialist subagents. Cannot read, write, or search files directly.",
+  "model": "claude-opus-4.6",
+  "prompt": "file://../prompts/sisyphus-system.md",
+  "tools": [
+    "subagent",
+    "thinking",
+    "todo",
+    "use_subagent"
+  ],
+  "allowedTools": [
+    "subagent",
+    "thinking",
+    "todo",
+    "@sequential-thinking",
+    "@memory",
+    "@context7",
+    "use_subagent"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md",
+    "skill://../skills/**/SKILL.md",
+    "skill://.kiro/skills/**/SKILL.md"
+  ],
+  "hooks": {
+    "stop": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/todo-continuation.sh\""
+      }
+    ]
+  },
+  "toolsSettings": {
+    "subagent": {
+      "availableAgents": [
+        "oracle",
+        "prometheus",
+        "metis",
+        "momus",
+        "analyst",
+        "hephaestus",
+        "atlas",
+        "executor",
+        "designer",
+        "qa-tester",
+        "build-error-resolver",
+        "code-reviewer",
+        "librarian",
+        "multimodal-looker",
+        "explore",
+        "writer"
+      ],
+      "trustedAgents": [
+        "oracle",
+        "prometheus",
+        "metis",
+        "momus",
+        "analyst",
+        "hephaestus",
+        "atlas",
+        "executor",
+        "designer",
+        "qa-tester",
+        "build-error-resolver",
+        "code-reviewer",
+        "librarian",
+        "multimodal-looker",
+        "explore",
+        "writer"
+      ]
+    }
+  },
+  "includeMcpJson": true,
+  "keyboardShortcut": "ctrl+v",
+  "welcomeMessage": "Sisyphus ready. What are we building?"
+}

@@ -1,0 +1,61 @@
+{
+  "name": "atlas",
+  "description": "Todo-list orchestrator \u2014 converts plans into todos, delegates each step to specialist subagents. Cannot read, write, or search files directly.",
+  "model": "claude-sonnet-4.6",
+  "prompt": "You are Atlas, the todo-list orchestrator. Convert plans into structured todos with dependencies. Delegate each step to the appropriate specialist subagent via use_subagent. Parallelize independent steps. Track completion and handle failure recovery (3 failures \u2192 consult oracle subagent). You cannot read or write files directly \u2014 always delegate.",
+  "tools": [
+    "subagent",
+    "thinking",
+    "todo",
+    "use_subagent"
+  ],
+  "allowedTools": [
+    "subagent",
+    "thinking",
+    "todo",
+    "@sequential-thinking",
+    "@memory",
+    "@context7",
+    "use_subagent"
+  ],
+  "resources": [
+    "__OH_MY_KIRO_STEERING_GLOB__",
+    "file://.kiro/steering/**/*.md"
+  ],
+  "hooks": {
+    "stop": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/todo-continuation.sh\""
+      }
+    ]
+  },
+  "toolsSettings": {
+    "subagent": {
+      "availableAgents": [
+        "executor",
+        "designer",
+        "hephaestus",
+        "qa-tester",
+        "build-error-resolver",
+        "explore",
+        "librarian",
+        "oracle",
+        "writer",
+        "code-reviewer"
+      ],
+      "trustedAgents": [
+        "executor",
+        "designer",
+        "hephaestus",
+        "qa-tester",
+        "build-error-resolver",
+        "explore",
+        "librarian",
+        "oracle",
+        "writer",
+        "code-reviewer"
+      ]
+    }
+  },
+  "includeMcpJson": true
+}
