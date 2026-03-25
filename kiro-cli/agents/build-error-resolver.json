@@ -18,7 +18,8 @@
     "write",
     "@sequential-thinking",
     "@memory",
-    "@context7"
+    "@context7",
+    "@builtin"
   ],
   "resources": [
     "__OH_MY_KIRO_STEERING_GLOB__",

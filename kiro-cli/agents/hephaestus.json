@@ -18,7 +18,8 @@
     "@sequential-thinking",
     "@memory",
     "@context7",
-    "use_subagent"
+    "use_subagent",
+    "@builtin"
   ],
   "resources": [
     "__OH_MY_KIRO_STEERING_GLOB__",
