@@ -25,14 +25,14 @@ Kiro CLI 멀티 에이전트 오케스트레이션 시스템.
 sisyphus는 `subagent`, `thinking`, `todo`만 가지고 있다. 모든 작업은 서브에이전트에 위임.
 
 ```
-omk                           # sisyphus로 시작
-ultrawork 인증 모듈 구현해줘     # 매직 키워드로 스킬 활성화
-@planner                      # 프롬프트 주입
-Ctrl+V                        # sisyphus 토글
-Ctrl+B                        # prometheus 토글
-Ctrl+N                        # executor 토글
-/agent swap oracle             # 수동 에이전트 전환
+omk                                    # sisyphus로 시작
+ultrawork 인증 모듈 구현해줘              # 매직 키워드로 스킬 활성화
+인증 모듈 리팩토링 계획 세워줘 @planner    # 프롬프트는 내용 뒤에 붙이기
+Ctrl+V / Ctrl+B / Ctrl+N               # sisyphus / prometheus / executor 토글
+/agent swap oracle                      # 수동 에이전트 전환
 ```
+
+> `@prompt`는 앞에 붙이면 뒤의 내용이 무시된다. **내용을 먼저 쓰고 뒤에 `@prompt`를 붙여야** 프롬프트 + 내용이 함께 전달된다.
 
 ## 에이전트 분류
 
