@@ -15,12 +15,18 @@ if tool_name not in {"use_subagent", "subagent"}:
     sys.exit(0)
 
 tool_response = payload.get("tool_response")
-response_text = ""
 
-if isinstance(tool_response, str):
-    response_text = tool_response.strip()
-elif isinstance(tool_response, dict):
-    response_text = (tool_response.get("result") or tool_response.get("output") or "").strip()
+def extract_text(val):
+    if isinstance(val, str):
+        return val.strip()
+    if isinstance(val, list):
+        return " ".join(str(v) for v in val).strip()
+    if isinstance(val, dict):
+        inner = val.get("result") or val.get("output") or ""
+        return extract_text(inner)
+    return str(val).strip() if val else ""
+
+response_text = extract_text(tool_response)
 
 if not response_text:
     sys.stderr.write(
