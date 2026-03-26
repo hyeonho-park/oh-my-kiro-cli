@@ -148,13 +148,16 @@ READ-ONLY로 변환할 때:
 
 ### Hook Assignment
 
-| 에이전트 분류 | preToolUse | stop |
-|-------------|-----------|------|
-| 오케스트레이터 | _(없음)_ | todo-continuation |
-| 실행자 (executor, hephaestus) | comment-checker, doc-blocker, test-location-validator | todo-continuation, cleanup-prompt |
-| 실행자 (designer) | comment-checker, doc-blocker | cleanup-prompt |
-| 실행자 (qa-tester) | test-location-validator | cleanup-prompt |
-| READ-ONLY | _(없음)_ | _(없음)_ |
+총 10개 훅 스크립트. 매처(matcher)가 있는 훅은 해당 도구 호출 후에만 발동한다.
+
+| 에이전트 분류 | preToolUse (fs_write) | postToolUse | stop |
+|-------------|-----------|-------------|------|
+| 오케스트레이터 (sisyphus, atlas) | _(없음)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
+| 실행자 (executor, hephaestus, build-error-resolver) | comment-checker, doc-blocker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| 실행자 (designer, writer) | comment-checker, doc-blocker | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| 실행자 (qa-tester) | comment-checker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| READ-ONLY (8개) | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| prometheus (READ-ONLY + subagent) | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read), empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | _(없음)_ |
 
 ---
 
@@ -184,6 +187,21 @@ READ-ONLY로 변환할 때:
 변환: YAML frontmatter 제거, `/command` → `@prompt-name`, `Task(agent=...)` → `use_subagent` 호출.
 
 ### Hooks: `hooks/**/*.sh` → `hooks/**/*.sh`
+
+총 10개 훅 스크립트:
+
+| 훅 | 라이프사이클 | 매처 | 출처 |
+|---|---|---|---|
+| comment-checker | preToolUse | fs_write | Claude Code hooks |
+| doc-blocker | preToolUse | fs_write | Claude Code hooks |
+| test-location-validator | preToolUse | fs_write | Claude Code hooks |
+| context-window-reminder | postToolUse | _(전체)_ | Claude Code hooks |
+| agent-usage-reminder | postToolUse | glob/grep | Claude Code hooks |
+| read-image-resizer | postToolUse | read | Claude Code hooks |
+| empty-subagent-response-detector | postToolUse | use_subagent | oh-my-openagent empty-task-response-detector |
+| delegate-retry-guidance | postToolUse | use_subagent | oh-my-openagent delegate-task-retry |
+| todo-continuation | stop | _(전체)_ | Claude Code hooks |
+| cleanup-prompt | stop | _(전체)_ | Claude Code hooks |
 
 훅은 Kiro stdin JSON 형식으로 변환. Claude는 환경변수/인자, Kiro는 JSON stdin.
 
@@ -312,8 +330,9 @@ omk  # sisyphus로 시작되는지 확인
 
 | 날짜 | 기반 버전 | 변경 사항 |
 |------|----------|-----------|
-| 2026-03-25 | oh-my-settings v3.10.0 | 초기 Full 마이그레이션: 17 에이전트, 12 스킬, 9 프롬프트, 7 훅, 9 steering |
+| 2026-03-25 | oh-my-settings v3.10.0 | 초기 Full 마이그레이션: 17 에이전트, 12 스킬, 9 프롬프트, 8 훅, 9 steering |
 | 2026-03-25 | _(Kiro 적응)_ | 오케스트레이터 도구 제한 (subagent+thinking+todo), toolsSettings 추가 (rm deny, write allowedPaths), subagent trustedAgents 전체 확장 |
+| 2026-03-26 | oh-my-openagent v3.13.1 | 훅 전면 정비: 신규 2개 (empty-subagent-response-detector, delegate-retry-guidance), 전 에이전트 훅 할당 완성 (17/17), 훅 총 8→10개 |
 
 ---
 

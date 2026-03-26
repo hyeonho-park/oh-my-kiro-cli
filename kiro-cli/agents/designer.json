@@ -34,7 +34,27 @@
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/doc-blocker.sh\""
       }
     ],
+    "postToolUse": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""
+      },
+      {
+        "matcher": "glob",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/agent-usage-reminder.sh\""
+      },
+      {
+        "matcher": "grep",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/agent-usage-reminder.sh\""
+      },
+      {
+        "matcher": "read",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/read-image-resizer.sh\""
+      }
+    ],
     "stop": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/todo-continuation.sh\""
+      },
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/cleanup-prompt.sh\""
       }

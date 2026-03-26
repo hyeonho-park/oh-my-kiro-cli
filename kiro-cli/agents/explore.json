@@ -19,5 +19,24 @@
     "__OH_MY_KIRO_STEERING_GLOB__",
     "file://.kiro/steering/**/*.md"
   ],
+  "hooks": {
+    "postToolUse": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""
+      },
+      {
+        "matcher": "glob",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/agent-usage-reminder.sh\""
+      },
+      {
+        "matcher": "grep",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/agent-usage-reminder.sh\""
+      },
+      {
+        "matcher": "read",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/read-image-resizer.sh\""
+      }
+    ]
+  },
   "includeMcpJson": false
 }
