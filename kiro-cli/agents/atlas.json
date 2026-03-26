@@ -23,6 +23,19 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "postToolUse": [
+      {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""
+      },
+      {
+        "matcher": "use_subagent",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/empty-subagent-response-detector.sh\""
+      },
+      {
+        "matcher": "use_subagent",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/delegate-retry-guidance.sh\""
+      }
+    ],
     "stop": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/stop/todo-continuation.sh\""

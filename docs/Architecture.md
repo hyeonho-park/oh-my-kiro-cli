@@ -28,7 +28,7 @@
     ├── steering/     # 9 steering files
     ├── skills/       # 12 skills (SKILL.md each)
     ├── prompts/      # 9 prompt assets
-    ├── hooks/        # 7 shell hook scripts
+    ├── hooks/        # 10 shell hook scripts
     └── settings/     # CLI + MCP settings
 ```
 
@@ -150,14 +150,39 @@
 
 ### Hook Assignment
 
+총 10개 훅 스크립트를 에이전트 분류에 따라 할당한다.
+
+#### 오케스트레이터
+
 | Agent | preToolUse | postToolUse | stop |
 |-------|-----------|-------------|------|
-| sisyphus | _(없음)_ | _(없음)_ | todo-continuation |
-| atlas | _(없음)_ | _(없음)_ | todo-continuation |
-| executor | comment-checker, doc-blocker, test-location-validator | agent-usage-reminder | todo-continuation, cleanup-prompt |
-| hephaestus | comment-checker, doc-blocker, test-location-validator | _(없음)_ | todo-continuation, cleanup-prompt |
-| qa-tester | test-location-validator | _(없음)_ | cleanup-prompt |
-| designer | comment-checker, doc-blocker | _(없음)_ | cleanup-prompt |
+| sisyphus | _(없음)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
+| atlas | _(없음)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
+
+#### 실행자
+
+| Agent | preToolUse | postToolUse | stop |
+|-------|-----------|-------------|------|
+| executor | comment-checker, doc-blocker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| hephaestus | comment-checker, doc-blocker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| designer | comment-checker, doc-blocker | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| qa-tester | comment-checker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| build-error-resolver | comment-checker, doc-blocker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| writer | comment-checker, doc-blocker | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+
+#### READ-ONLY
+
+| Agent | preToolUse | postToolUse | stop |
+|-------|-----------|-------------|------|
+| oracle | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| analyst | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| code-reviewer | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| explore | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| librarian | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| metis | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| momus | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| multimodal-looker | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| prometheus | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read), empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | _(없음)_ |
 
 ## Installer Architecture
 

@@ -18,7 +18,7 @@ Kiro CLI 멀티 에이전트 오케스트레이션 시스템.
 - **12 스킬** — ultrawork, ralph, planner, deepsearch 등 (매직 키워드로 자동 활성화)
 - **9 프롬프트** — `@planner`, `@start-work`, `@ralph-loop` 등
 - **9 steering** — workflow, delegation, constraints, coding-style 등
-- **7 훅** — comment-checker, doc-blocker, todo-continuation 등
+- **10 훅** — comment-checker, doc-blocker, context-window-reminder, empty-subagent-response-detector 등
 
 ## 사용
 
