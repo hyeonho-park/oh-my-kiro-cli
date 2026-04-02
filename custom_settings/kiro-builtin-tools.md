@@ -185,10 +185,11 @@ oh-my-openagent에는 없고 Kiro CLI에서 제공하는 빌트인 도구들의 
 
 | 에이전트 역할 | tools | allowedTools 추가 | toolsSettings |
 |-------------|-------|-------------------|---------------|
-| 오케스트레이터 (sisyphus) | `["*"]` | `subagent`, `thinking`, `introspect`, `report` | subagent.availableAgents 설정 |
-| 계획 (prometheus) | 읽기 + `subagent`, `thinking` | 전부 | - |
-| 실행 (executor) | `["*"]` | 읽기 + `thinking` | shell.autoAllowReadonly |
-| Deep Worker (hephaestus) | `["*"]` | 읽기 + `subagent`, `thinking`, `report` | - |
-| 오케스트레이터 (atlas) | `["*"]` | 읽기 + `subagent`, `thinking`, `report` | subagent.availableAgents 설정 |
-| READ-ONLY (oracle, code-reviewer) | 읽기만 | 전부 | - |
-| 경량 (explore, writer) | 읽기만 | 전부 | - |
+| 오케스트레이터 (`sisyphus`, `atlas`) | `subagent`, `thinking`, `todo` | 없음 | `subagent.availableAgents`, `trustedAgents` 설정 |
+| 계획 (`prometheus`) | `read`, `glob`, `grep`, `shell` | `subagent`, `thinking`, `use_subagent` | READ-ONLY shell 정책 + subagent post hooks |
+| 실행 (`executor`, `designer`, `qa-tester`, `build-error-resolver`, `writer`) | `["*"]` | 역할별 추가 도구만 최소화 | `write.allowedPaths`, `shell.autoAllowReadonly`, `deniedCommands` |
+| Deep Worker (`hephaestus`) | `["*"]` | `@sequential-thinking`, `@memory`, `@context7`, `@builtin` | 실행자와 동일한 write/shell 정책 |
+| READ-ONLY (`oracle`, `analyst`, `code-reviewer`, `explore`, `metis`, `momus`, `multimodal-looker`) | `read`, `glob`, `grep`, `shell` | 필요 시 memory/context7 계열만 | destructive shell pre-hook |
+| Specialist READ-ONLY (`librarian`) | `read`, `glob`, `grep`, `shell`, `web_search`, `web_fetch` | `@sequential-thinking`, `@memory`, `@context7` | destructive shell pre-hook |
+
+현재 repo는 broad tool expansion보다 역할 경계 보존을 우선한다. 특히 오케스트레이터에 `read`/`write`/`shell`을 다시 추가하지 않는다.

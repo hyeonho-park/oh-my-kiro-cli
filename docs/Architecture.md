@@ -27,8 +27,8 @@
     ├── agents/       # 17 agent JSON templates
     ├── steering/     # 9 steering files
     ├── skills/       # 12 skills (SKILL.md each)
-    ├── prompts/      # 9 prompt assets
-    ├── hooks/        # 10 shell hook scripts
+    ├── prompts/      # 25 prompt assets
+    ├── hooks/        # 12 shell hook scripts
     └── settings/     # CLI + MCP settings
 ```
 
@@ -50,9 +50,14 @@
 │   ├── orchestrate/SKILL.md
 │   ├── ultrawork/SKILL.md
 │   └── ...
-├── prompts/                         # oh-my-kiro-cli가 생성 (9개)
+├── prompts/                         # oh-my-kiro-cli가 생성 (25개)
 │   ├── sisyphus-system.md
-│   └── ...
+│   ├── planner.md
+│   ├── ...
+│   └── agents/
+│       ├── oracle.md
+│       ├── analyst.md
+│       └── ...
 ├── hooks/
 │   └── oh-my-kiro-cli/              # oh-my-kiro-cli 전용 네임스페이스
 │       ├── pre-tool-use/
@@ -69,6 +74,7 @@
 - `agents/`, `skills/`: oh-my-kiro-cli가 관리하는 이름만 덮어쓰고 나머지는 보존
 - `settings/cli.json`: deep merge로 기존 설정 보존
 - `settings/mcp.json`: 파일이 이미 있으면 설치하지 않음
+- uninstall은 oh-my-kiro-cli가 직접 설치한 `settings/mcp.json`만 제거하고, 기존 사용자 파일은 보존
 - `hooks/oh-my-kiro-cli/`: 전용 네임스페이스 사용, 다른 hooks 디렉토리와 충돌 없음
 
 ### Path Conventions
@@ -78,6 +84,7 @@
 | Path Pattern | Resolves To | Used For |
 |-------------|-------------|----------|
 | `file://../prompts/X.md` | `~/.kiro/prompts/X.md` | agent `prompt` field |
+| `file://../prompts/agents/X.md` | `~/.kiro/prompts/agents/X.md` | agent prompt assets |
 | `skill://../skills/**/SKILL.md` | `~/.kiro/skills/**/SKILL.md` | 글로벌 스킬 자동 발견 |
 | `file://.kiro/steering/**/*.md` | `<workspace>/.kiro/steering/*.md` | 워크스페이스 steering |
 | `skill://.kiro/skills/**/SKILL.md` | `<workspace>/.kiro/skills/*.md` | 워크스페이스 스킬 |
@@ -86,13 +93,29 @@
 
 ## Agent Architecture
 
+### Current rollout status
+
+- `sisyphus` continues to use `file://../prompts/sisyphus-system.md`
+- All non-`sisyphus` agents now use prompt files under `prompts/agents/`
+- `sisyphus` continues to use `prompts/sisyphus-system.md` as its dedicated orchestrator system prompt
+- Secret detection now runs as an execution-agent `fs_write` pre-hook
+- `librarian` now pilots `web_search` and `web_fetch` as specialist-only external research tools
+- `settings/mcp.json` is preserved when it pre-exists and removed on uninstall only when oh-my-kiro-cli installed it
+- `omk` alias creation is install-only in the current lifecycle policy and is not automatically reverted on uninstall
+
+### Intentional boundaries
+
+- prompt externalization is whole-file only; prompt fragment composition is not part of the runtime model
+- READ-ONLY shell policy remains hook-first; broad `denyByDefault` rollout is still not the live baseline
+- `librarian` is the only built-in external research pilot; `code` and `knowledge` are not broadly enabled
+
 ### 에이전트 분류
 
 | 분류 | 도구 | 에이전트 |
 |------|------|----------|
 | **오케스트레이터** | `subagent`, `thinking`, `todo` | sisyphus, atlas |
 | **실행자** | `["*"]` + `allowedTools`에 write 포함 | executor, hephaestus, designer, qa-tester, build-error-resolver, writer |
-| **READ-ONLY** | `read`, `glob`, `grep`, `shell` | oracle, analyst, code-reviewer, explore, librarian, metis, momus, multimodal-looker, prometheus |
+| **READ-ONLY** | `read`, `glob`, `grep`, `shell` (+ `web_search`, `web_fetch` for `librarian`) | oracle, analyst, code-reviewer, explore, librarian, metis, momus, multimodal-looker, prometheus |
 
 오케스트레이터는 직접 파일을 읽거나 쓸 수 없다. `use_subagent`로만 작업한다.
 
@@ -150,7 +173,7 @@
 
 ### Hook Assignment
 
-총 10개 훅 스크립트를 에이전트 분류에 따라 할당한다.
+총 12개 훅 스크립트를 에이전트 분류에 따라 할당한다.
 
 #### 오케스트레이터
 
@@ -163,26 +186,26 @@
 
 | Agent | preToolUse | postToolUse | stop |
 |-------|-----------|-------------|------|
-| executor | comment-checker, doc-blocker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
-| hephaestus | comment-checker, doc-blocker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
-| designer | comment-checker, doc-blocker | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
-| qa-tester | comment-checker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
-| build-error-resolver | comment-checker, doc-blocker, test-location-validator | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
-| writer | comment-checker, doc-blocker | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| executor | comment-checker, doc-blocker, test-location-validator, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| hephaestus | comment-checker, doc-blocker, test-location-validator, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| designer | comment-checker, doc-blocker, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| qa-tester | comment-checker, test-location-validator, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| build-error-resolver | comment-checker, doc-blocker, test-location-validator, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| writer | comment-checker, doc-blocker, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
 
 #### READ-ONLY
 
 | Agent | preToolUse | postToolUse | stop |
 |-------|-----------|-------------|------|
-| oracle | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| analyst | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| code-reviewer | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| explore | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| librarian | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| metis | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| momus | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| multimodal-looker | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| prometheus | _(없음)_ | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read), empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | _(없음)_ |
+| oracle | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| analyst | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| code-reviewer | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| explore | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| librarian | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| metis | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| momus | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| multimodal-looker | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
+| prometheus | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read), empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | _(없음)_ |
 
 ## Installer Architecture
 
@@ -199,7 +222,13 @@ Agent `prompt` and `resources` fields use relative paths that resolve from `~/.k
 - Steering, prompts, skills: 그대로 복사
 - CLI settings: deep merge (기존 키 보존)
 - MCP settings: 파일 없을 때만 설치
-- Hooks: 복사 후 실행 권한 부여
+- Hooks: 복사 후 실행 권한 부여 (현재 12개)
 - Backup: 충돌 파일은 타임스탬프 백업 후 덮어쓰기
 - 관리 대상이 아닌 파일은 절대 건드리지 않음
 - `alias omk="kiro-cli --agent sisyphus"`를 zshrc/bashrc에 자동 추가
+- alias는 현재 install-only 정책이며 uninstall 시 자동으로 제거하지 않음
+
+### Validation helpers
+
+- `scripts/validate.sh`: externalized prompt refs, hook existence, READ-ONLY/실행자 hook-matrix integrity, prompt inventory symmetry, orchestrator/실행자/READ-ONLY 도구 경계, `librarian` specialist-tool exclusivity, `mcp_managed` ownership metadata 검사
+- `tests/smoke-install.sh`: temp `KIRO_HOME` install/uninstall smoke test, hook behavior 확인, externalized prompt cleanup 확인, installer-managed `settings/mcp.json` 제거 확인, 기존 `settings/mcp.json` install/uninstall 보존 확인, alias install-only 정책 확인
