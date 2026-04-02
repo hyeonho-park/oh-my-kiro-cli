@@ -47,6 +47,26 @@ After 3 consecutive failures on the same approach:
 4. **Consult Oracle** — Spawn oracle subagent for guidance
 5. **Try alternative** — Use oracle's recommendation
 
+### Error Decision Rules
+
+When work fails, use this order:
+
+1. **Identify the failure type** - missing context, wrong approach, environment issue, or true blocker
+2. **Fix the immediate cause once** - do not repeat the same blind retry
+3. **Change approach on second failure** - different search angle, different file surface, different implementation path, or narrower scope
+4. **Escalate on third failure** - consult oracle before continuing
+
+### Reporting Failed Work
+
+When reporting a failed or partial result, include:
+
+- what was attempted
+- what actually failed
+- what remains safe to do next
+- whether the blocker is local, architectural, or environment-specific
+
+Do not claim completion when the real state is partial or blocked.
+
 ## Phase 3: Completion
 
 A task is NOT complete without:

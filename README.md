@@ -7,10 +7,29 @@ Kiro CLI 멀티 에이전트 오케스트레이션 시스템.
 
 ```bash
 ./install.sh    # ~/.kiro/에 설치 + omk alias 추가
-./uninstall.sh  # 설치한 파일만 제거
+./uninstall.sh  # 관리 대상 파일 제거 (omk alias는 자동 제거하지 않음)
 ```
 
 설치 후 `omk`로 실행. sisyphus 오케스트레이터가 기본 에이전트로 시작.
+
+기존 `~/.kiro/settings/mcp.json`가 있으면 install은 그 파일을 보존하고, uninstall도 그 기존 파일을 건드리지 않는다.
+
+## 현재 상태
+
+- 17 agents / 25 prompt assets / 12 hook scripts
+- `sisyphus`를 제외한 16개 에이전트는 모두 `prompts/agents/*.md`를 사용
+- `librarian`만 `web_search`, `web_fetch`를 사용하는 specialist pilot 상태
+- `omk` alias는 install-only 정책이며 uninstall에서 자동 제거하지 않음
+
+## 검증
+
+```bash
+./scripts/validate.sh
+./tests/smoke-install.sh
+```
+
+- `scripts/validate.sh`: prompt refs, hook matrix, specialist tool exclusivity, lifecycle invariants 검증
+- `tests/smoke-install.sh`: temp `KIRO_HOME` install/uninstall, hook behavior, `settings/mcp.json` ownership, alias install-only 정책 검증
 
 ## 사용
 
@@ -32,7 +51,7 @@ Ctrl+V / Ctrl+B / Ctrl+N               # sisyphus / prometheus / executor 토글
 | -------------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
 | 오케스트레이터 | subagent, thinking, todo   | sisyphus, atlas                                                                                 |
 | 실행자         | 전체 (write 포함, rm 차단) | executor, hephaestus, designer, qa-tester, build-error-resolver, writer                         |
-| READ-ONLY      | read, glob, grep, shell    | oracle, prometheus, metis, momus, analyst, code-reviewer, librarian, explore, multimodal-looker |
+| READ-ONLY      | read, glob, grep, shell (`librarian` additionally uses web_search/web_fetch) | oracle, prometheus, metis, momus, analyst, code-reviewer, librarian, explore, multimodal-looker |
 
 ## 참고
 

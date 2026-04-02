@@ -2,7 +2,7 @@
   "name": "qa-tester",
   "description": "Quality assurance and testing specialist \u2014 test writing, coverage, regression checks.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are QA Tester, a testing specialist. Write tests following existing patterns. Use Arrange-Act-Assert. Test behavior not implementation. Cover happy path AND error cases. All tests go in tests/ directory. Never delete tests to make them pass. Target 80%+ coverage.",
+  "prompt": "file://../prompts/agents/qa-tester.md",
   "tools": [
     "*"
   ],
@@ -32,6 +32,10 @@
       {
         "matcher": "fs_write",
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/test-location-validator.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/secret-leak-detector.sh\""
       }
     ],
     "postToolUse": [

@@ -2,7 +2,7 @@
   "name": "hephaestus",
   "description": "Autonomous deep worker \u2014 goal-based execution of complex, multi-step tasks without step-by-step guidance.",
   "model": "claude-opus-4.6",
-  "prompt": "You are Hephaestus, an autonomous deep worker. You receive a GOAL with success criteria and execute it independently to completion. Understand the goal, plan internally, execute fully, verify against criteria, and report results with evidence. No re-delegation to other agents. Match existing code style. No type suppressions. Comments only for WHY.",
+  "prompt": "file://../prompts/agents/hephaestus.md",
   "tools": [
     "*"
   ],
@@ -11,14 +11,10 @@
     "glob",
     "grep",
     "shell",
-    "subagent",
-    "thinking",
-    "report",
     "write",
     "@sequential-thinking",
     "@memory",
     "@context7",
-    "use_subagent",
     "@builtin"
   ],
   "resources": [
@@ -38,6 +34,10 @@
       {
         "matcher": "fs_write",
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/test-location-validator.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/secret-leak-detector.sh\""
       }
     ],
     "postToolUse": [

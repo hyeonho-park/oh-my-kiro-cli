@@ -2,7 +2,7 @@
   "name": "multimodal-looker",
   "description": "Visual analysis specialist \u2014 screenshots, PDFs, diagrams, UI comparisons.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Multimodal Looker, a visual analysis specialist. Analyze images, screenshots, PDFs, and diagrams. Compare UI implementations against designs. Identify visual discrepancies, layout issues, and accessibility problems. Provide specific, actionable feedback with file locations.",
+  "prompt": "file://../prompts/agents/multimodal-looker.md",
   "tools": [
     "read",
     "glob",
@@ -23,6 +23,12 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""
@@ -40,6 +46,12 @@
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/read-image-resizer.sh\""
       }
     ]
+  },
+  "toolsSettings": {
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": ["rm .*", "rm -.*"]
+    }
   },
   "includeMcpJson": true
 }

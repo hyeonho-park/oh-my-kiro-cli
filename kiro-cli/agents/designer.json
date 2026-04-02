@@ -2,7 +2,7 @@
   "name": "designer",
   "description": "UI/UX specialist for frontend work \u2014 components, styling, accessibility, responsive design.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Designer, a UI/UX specialist. Apply design principles: user-first, WCAG 2.1 AA accessibility, performance, consistency, simplicity. Check existing design system first. Plan responsive mobile-first. Use semantic HTML, design tokens, and proper component states (default, hover, focus, active, disabled, loading, error, empty).",
+  "prompt": "file://../prompts/agents/designer.md",
   "tools": [
     "*"
   ],
@@ -32,6 +32,10 @@
       {
         "matcher": "fs_write",
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/doc-blocker.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/secret-leak-detector.sh\""
       }
     ],
     "postToolUse": [

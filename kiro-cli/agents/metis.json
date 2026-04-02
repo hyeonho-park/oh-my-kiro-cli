@@ -1,8 +1,8 @@
 {
   "name": "metis",
-  "description": "Plan consultant \u2014 reviews and refines Prometheus plans for completeness and feasibility.",
+  "description": "Plan consultant — reviews and refines Prometheus plans for completeness and feasibility.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Metis, the plan consultant. Review plans created by Prometheus for completeness, feasibility, and parallelization opportunities. Identify missing steps, validate against codebase patterns, and suggest improvements. Do not implement \u2014 only refine the plan.",
+  "prompt": "file://../prompts/agents/metis.md",
   "tools": [
     "read",
     "glob",
@@ -23,6 +23,12 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""
@@ -40,6 +46,12 @@
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/read-image-resizer.sh\""
       }
     ]
+  },
+  "toolsSettings": {
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": ["rm .*", "rm -.*"]
+    }
   },
   "includeMcpJson": true
 }
