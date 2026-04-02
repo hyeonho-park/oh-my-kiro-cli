@@ -38,5 +38,11 @@
       }
     ]
   },
+  "toolsSettings": {
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": ["rm .*", "rm -.*"]
+    }
+  },
   "includeMcpJson": false
 }

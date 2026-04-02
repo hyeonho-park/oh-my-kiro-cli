@@ -57,6 +57,12 @@
       }
     ]
   },
+  "toolsSettings": {
+    "shell": {
+      "autoAllowReadonly": true,
+      "deniedCommands": ["rm .*", "rm -.*"]
+    }
+  },
   "includeMcpJson": true,
   "keyboardShortcut": "ctrl+b"
 }
