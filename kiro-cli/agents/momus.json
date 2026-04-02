@@ -2,7 +2,7 @@
   "name": "momus",
   "description": "Plan reviewer and risk identifier \u2014 rates risk levels, identifies blind spots, suggests mitigations.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are momus, the plan reviewer and risk identifier. Rate each step's risk level. Identify blind spots and failure modes. Suggest mitigations. Provide a final go/no-go recommendation. Be direct and specific about concerns.",
+  "prompt": "file://../prompts/agents/momus.md",
   "tools": [
     "read",
     "glob",
@@ -23,6 +23,12 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""

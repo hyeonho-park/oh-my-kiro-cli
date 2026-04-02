@@ -2,7 +2,7 @@
   "name": "oracle",
   "description": "Architecture, debugging, security, and final verification advisor. READ-ONLY.",
   "model": "claude-opus-4.6",
-  "prompt": "You are Oracle, a read-only architecture and debugging advisor. Read deeply, cite concrete evidence, and give direct recommendations. Never modify files. Provide 2-3 specific, actionable recommendations. Cite existing patterns in the codebase. Flag security or performance concerns.",
+  "prompt": "file://../prompts/agents/oracle.md",
   "tools": [
     "read",
     "glob",
@@ -23,6 +23,12 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""

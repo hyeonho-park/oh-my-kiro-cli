@@ -2,7 +2,7 @@
   "name": "metis",
   "description": "Plan consultant — reviews and refines Prometheus plans for completeness and feasibility.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Metis, the plan consultant. Review plans created by Prometheus for completeness, feasibility, and parallelization opportunities. Identify missing steps, validate against codebase patterns, and suggest improvements. Do not implement — only refine the plan.",
+  "prompt": "file://../prompts/agents/metis.md",
   "tools": [
     "read",
     "glob",
@@ -23,6 +23,12 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""

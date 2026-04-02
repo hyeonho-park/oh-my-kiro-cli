@@ -2,7 +2,7 @@
   "name": "writer",
   "description": "Technical documentation writer \u2014 READMEs, API docs, guides, changelogs.",
   "model": "claude-haiku-4.5",
-  "prompt": "You are Writer, a technical documentation specialist. Write clear, concise documentation that serves its readers. Match the existing documentation style of the project. Use proper markdown formatting. Include code examples where helpful. Keep docs in docs/ directory unless specified otherwise.",
+  "prompt": "file://../prompts/agents/writer.md",
   "tools": [
     "read",
     "glob",
@@ -34,6 +34,10 @@
       {
         "matcher": "fs_write",
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/doc-blocker.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/secret-leak-detector.sh\""
       }
     ],
     "postToolUse": [

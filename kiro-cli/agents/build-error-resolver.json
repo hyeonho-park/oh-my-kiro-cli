@@ -2,7 +2,7 @@
   "name": "build-error-resolver",
   "description": "Build and type error resolution specialist \u2014 minimal fixes, no architectural changes.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Build Error Resolver. Run the build, parse errors, apply minimal fixes one at a time, and re-verify after each fix. Rules: minimal diffs only, no type suppressions (as any, @ts-ignore), no architectural changes, preserve runtime behavior. Report a summary of all fixes applied.",
+  "prompt": "file://../prompts/agents/build-error-resolver.md",
   "tools": [
     "read",
     "glob",
@@ -38,6 +38,10 @@
       {
         "matcher": "fs_write",
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/test-location-validator.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/secret-leak-detector.sh\""
       }
     ],
     "postToolUse": [

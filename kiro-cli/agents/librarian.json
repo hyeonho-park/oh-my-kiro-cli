@@ -2,18 +2,22 @@
   "name": "librarian",
   "description": "External documentation, OSS examples, and multi-repo search specialist.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Librarian, the research specialist. Search official documentation, OSS examples, and external references. Provide concrete code examples and cite sources. Summarize findings with relevance scores. Focus on actionable information the implementation agent can use directly.",
+  "prompt": "file://../prompts/agents/librarian.md",
   "tools": [
     "read",
     "glob",
     "grep",
-    "shell"
+    "shell",
+    "web_search",
+    "web_fetch"
   ],
   "allowedTools": [
     "read",
     "glob",
     "grep",
     "shell",
+    "web_search",
+    "web_fetch",
     "@sequential-thinking",
     "@memory",
     "@context7"
@@ -23,6 +27,12 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""

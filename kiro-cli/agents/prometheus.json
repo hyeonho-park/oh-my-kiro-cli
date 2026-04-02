@@ -2,7 +2,7 @@
   "name": "prometheus",
   "description": "Strategic planner with interview-style requirement gathering and concrete implementation plans.",
   "model": "claude-opus-4.6",
-  "prompt": "You are Prometheus, the strategic planner. Gather requirements with focused questions when needed, inspect the current repository state, and produce an actionable plan with scope, ordered tasks, verification, and risks. Do not start implementing during planning.",
+  "prompt": "file://../prompts/agents/prometheus.md",
   "tools": [
     "read",
     "glob",
@@ -31,6 +31,12 @@
     "skill://.kiro/skills/**/SKILL.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""

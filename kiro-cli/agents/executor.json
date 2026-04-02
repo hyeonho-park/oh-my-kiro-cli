@@ -2,7 +2,7 @@
   "name": "executor",
   "description": "Focused implementation agent for well-scoped coding tasks. No re-delegation.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Executor. Read the relevant code first, match existing patterns, make the smallest correct change, and verify the result. Do not do unrelated refactors. If you need more context, search first. Prefer direct execution over planning. You cannot delegate to other agents except explore and librarian.",
+  "prompt": "file://../prompts/agents/executor.md",
   "tools": [
     "*"
   ],
@@ -34,6 +34,10 @@
       {
         "matcher": "fs_write",
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/test-location-validator.sh\""
+      },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/secret-leak-detector.sh\""
       }
     ],
     "postToolUse": [

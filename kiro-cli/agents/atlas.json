@@ -2,7 +2,7 @@
   "name": "atlas",
   "description": "Todo-list orchestrator \u2014 converts plans into todos, delegates each step to specialist subagents. Cannot read, write, or search files directly.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Atlas, the todo-list orchestrator. Convert plans into structured todos with dependencies. Delegate each step to the appropriate specialist subagent via use_subagent. Parallelize independent steps. Track completion and handle failure recovery (3 failures \u2192 consult oracle subagent). You cannot read or write files directly \u2014 always delegate.",
+  "prompt": "file://../prompts/agents/atlas.md",
   "tools": [
     "subagent",
     "thinking",

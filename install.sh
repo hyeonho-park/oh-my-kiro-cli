@@ -10,7 +10,7 @@ META_FILE="${KIRO_HOME}/.oh-my-kiro-cli-meta"
 
 AGENTS=(sisyphus oracle prometheus metis momus analyst hephaestus atlas executor designer qa-tester build-error-resolver code-reviewer librarian multimodal-looker explore writer)
 STEERING_FILES=(AGENTS.md workflow.md delegation.md constraints.md verification.md coding-style.md git-workflow.md testing.md patterns.md)
-PROMPT_FILES=(sisyphus-system.md planner.md start-work.md handoff.md code-review.md ralph-loop.md ulw-loop.md refactor.md build-fix.md)
+PROMPT_FILES=(sisyphus-system.md planner.md start-work.md handoff.md code-review.md ralph-loop.md ulw-loop.md refactor.md build-fix.md agents/oracle.md agents/analyst.md agents/code-reviewer.md agents/explore.md agents/librarian.md agents/metis.md agents/momus.md agents/multimodal-looker.md agents/atlas.md agents/build-error-resolver.md agents/designer.md agents/executor.md agents/hephaestus.md agents/prometheus.md agents/qa-tester.md agents/writer.md)
 SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval)
 
 log() { echo "[oh-my-kiro-cli] $1"; }
@@ -102,6 +102,8 @@ PY
 mkdir -p "$KIRO_HOME/agents" "$KIRO_HOME/steering" "$KIRO_HOME/prompts" "$KIRO_HOME/skills" "$KIRO_HOME/settings" "$KIRO_HOME/hooks" "$KIRO_HOME/backups"
 log "Backing up conflicting files to ${BACKUP_DIR}"
 
+MCP_MANAGED=0
+
 for agent in "${AGENTS[@]}"; do
   render_agent "$SOURCE_ROOT/agents/${agent}.json" "$KIRO_HOME/agents/${agent}.json" "agents/${agent}.json"
 done
@@ -136,6 +138,7 @@ log "Merged CLI settings"
 
 if [ ! -f "$KIRO_HOME/settings/mcp.json" ]; then
   install_file "$SOURCE_ROOT/settings/mcp.json" "$KIRO_HOME/settings/mcp.json" "settings/mcp.json"
+  MCP_MANAGED=1
   log "Installed MCP settings"
 else
   warn "Leaving existing settings/mcp.json unchanged"
@@ -156,6 +159,7 @@ agents=${AGENTS[*]}
 steering=${STEERING_FILES[*]}
 prompts=${PROMPT_FILES[*]}
 skills=${SKILLS[*]}
+mcp_managed=${MCP_MANAGED}
 EOF
 
 SHELL_RC=""
@@ -181,7 +185,7 @@ log "  Agents:   ${#AGENTS[@]}"
 log "  Steering: ${#STEERING_FILES[@]}"
 log "  Prompts:  ${#PROMPT_FILES[@]}"
 log "  Skills:   ${#SKILLS[@]}"
-log "  Hooks:    8"
+log "  Hooks:    12"
 log "Backup: ${BACKUP_DIR}"
 log ""
 log "Run 'source ${SHELL_RC:-~/.zshrc}' then type 'omk' to start."

@@ -53,6 +53,24 @@ Every delegation MUST include:
 5. CONTEXT: File paths, patterns, constraints
 ```
 
+## Result Reporting Convention
+
+Delegated results should stay human-readable, but follow a consistent shape:
+
+1. `STATUS` - `done`, `blocked`, or `partial`
+2. `WHAT CHANGED` - files touched, outputs produced, or findings collected
+3. `EVIDENCE` - commands run, checks performed, or concrete observations
+4. `OPEN ITEMS` - follow-up work, blockers, or risks if anything remains
+
+Do NOT invent machine-readable XML, JSON envelopes, or fake protocol markers unless the runtime actually supports them.
+
+## Delegation Request Quality
+
+- Ask for the smallest useful result, not a vague exploration dump.
+- Require file paths and concrete evidence in every meaningful result.
+- If a task can fail in multiple ways, ask the subagent to distinguish root cause from symptoms.
+- If the result will feed another step, ask for the exact decision it should unblock.
+
 ## Deep Parallel Delegation
 
 When a task decomposes into multiple independent work units:

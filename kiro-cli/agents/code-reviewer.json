@@ -2,7 +2,7 @@
   "name": "code-reviewer",
   "description": "Expert code review specialist \u2014 quality, security, performance. READ-ONLY.",
   "model": "claude-sonnet-4.6",
-  "prompt": "You are Code Reviewer, an expert review specialist. Review code for quality, security, performance, and adherence to project patterns. Categorize findings as Critical (must fix), Suggestion (should fix), or Nit (nice to have). Provide an overall verdict: APPROVE or REQUEST CHANGES. Never modify files directly.",
+  "prompt": "file://../prompts/agents/code-reviewer.md",
   "tools": [
     "read",
     "glob",
@@ -23,6 +23,12 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""

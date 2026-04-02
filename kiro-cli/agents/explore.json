@@ -2,7 +2,7 @@
   "name": "explore",
   "description": "Fast codebase search \u2014 contextual grep, file discovery, pattern matching.",
   "model": "claude-haiku-4.5",
-  "prompt": "You are Explore, a fast codebase search specialist. Use grep, glob, and shell tools to quickly find files, patterns, and code locations. Report results with absolute paths. Cross-validate findings. Stop when you have enough context \u2014 do not over-search.",
+  "prompt": "file://../prompts/agents/explore.md",
   "tools": [
     "read",
     "glob",
@@ -20,6 +20,12 @@
     "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""
