@@ -14,21 +14,36 @@ tool_input = payload.get("tool_input", {}) or {}
 if not isinstance(tool_input, dict):
     sys.exit(0)
 
-agent_name = tool_input.get("agent_name") or ""
-if not agent_name.strip():
-    sys.stderr.write(
-        "agent_name is missing or empty. "
-        "Run ListAgents first, then specify a valid agent_name.\n"
-    )
+command = tool_input.get("command") or ""
+
+# ListAgents doesn't require agent_name or description
+if command == "ListAgents":
+    sys.exit(0)
+
+# InvokeSubagents: validate each subagent entry
+content = tool_input.get("content") or {}
+subagents = content.get("subagents") or []
+
+if not subagents:
+    sys.stderr.write("No subagents specified in InvokeSubagents call.\n")
     sys.exit(2)
 
-description = tool_input.get("description") or tool_input.get("query") or tool_input.get("task") or ""
-if len(description.strip()) < 10:
-    sys.stderr.write(
-        "Subagent description is too short (< 10 chars). "
-        "Provide a clear, specific task description for the subagent.\n"
-    )
-    sys.exit(2)
+for i, sub in enumerate(subagents):
+    agent_name = (sub.get("agent_name") or "").strip()
+    if not agent_name:
+        sys.stderr.write(
+            f"agent_name is missing or empty in subagent[{i}]. "
+            "Run ListAgents first, then specify a valid agent_name.\n"
+        )
+        sys.exit(2)
+
+    query = (sub.get("query") or "").strip()
+    if len(query) < 10:
+        sys.stderr.write(
+            f"Subagent[{i}] query is too short (< 10 chars). "
+            "Provide a clear, specific task description.\n"
+        )
+        sys.exit(2)
 
 sys.exit(0)
 PY
