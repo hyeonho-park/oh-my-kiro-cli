@@ -40,6 +40,9 @@
     ],
     "postToolUse": [
       {
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/circuit-breaker.sh\""
+      },
+      {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""
       },
       {

@@ -25,6 +25,12 @@
     "skill://.kiro/skills/**/SKILL.md"
   ],
   "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "use_subagent",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/delegate-validator.sh\""
+      }
+    ],
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""

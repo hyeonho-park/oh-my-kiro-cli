@@ -55,5 +55,28 @@ for content in contents:
             )
             sys.exit(2)
 
+# Block cloud credential env vars in shell commands
+tool_name = payload.get("tool_name", "")
+if tool_name in ("shell", "execute", "bash", "run_command"):
+    cloud_cred_vars = [
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_SESSION_TOKEN",
+        "AZURE_CLIENT_SECRET",
+        "AZURE_TENANT_ID",
+        "GCP_SERVICE_ACCOUNT_KEY",
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        "ANTHROPIC_API_KEY",
+        "OPENAI_API_KEY",
+    ]
+    command_text = tool_input.get("command", "")
+    if isinstance(command_text, str) and command_text:
+        for var in cloud_cred_vars:
+            if re.search(rf"\b{var}\s*=", command_text):
+                sys.stderr.write(
+                    f"Cloud credential env var '{var}' assignment detected in shell command. "
+                    "Use a credential manager or config file instead.\n"
+                )
+                sys.exit(2)
+
 sys.exit(0)
 PY

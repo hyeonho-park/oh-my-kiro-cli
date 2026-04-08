@@ -25,3 +25,9 @@ If todos remain incomplete:
 ```
 @ralph-loop "Implement user authentication with OAuth2, including login, logout, token refresh, and session management"
 ```
+
+## Verification Standards
+
+- Oracle approval requires explicit keywords: VERIFIED, APPROVED, PASSES, CONFIRMED
+- Promise language in results ("will do", "going to") means the work is NOT done
+- If Oracle fails twice, fall back to code-reviewer for verification
