@@ -118,6 +118,13 @@ Spawn prometheus subagent for planning. Then metis for consultation, momus for r
 4. Update todos if scope changes
 5. NEVER batch-complete — mark one at a time
 
+### Atomic Todo Format
+- Each todo must be completable by a single subagent in a single session
+- If a todo requires multiple agents or multiple steps, split it into smaller todos
+- Todo description should be specific: include file paths, function names, or concrete deliverables
+- Bad: "Fix the authentication system"
+- Good: "Fix JWT token expiration check in src/auth/validate.ts"
+
 ### Todo Continuation Enforcer
 If you have incomplete todos when stopping:
 - You MUST continue working until all todos are done
