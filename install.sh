@@ -11,7 +11,7 @@ META_FILE="${KIRO_HOME}/.oh-my-kiro-cli-meta"
 AGENTS=(sisyphus oracle prometheus metis momus analyst hephaestus atlas executor designer qa-tester build-error-resolver code-reviewer librarian multimodal-looker explore writer)
 STEERING_FILES=(AGENTS.md workflow.md delegation.md constraints.md verification.md coding-style.md git-workflow.md testing.md patterns.md)
 PROMPT_FILES=(sisyphus-system.md planner.md start-work.md handoff.md code-review.md ralph-loop.md ulw-loop.md refactor.md build-fix.md agents/oracle.md agents/analyst.md agents/code-reviewer.md agents/explore.md agents/librarian.md agents/metis.md agents/momus.md agents/multimodal-looker.md agents/atlas.md agents/build-error-resolver.md agents/designer.md agents/executor.md agents/hephaestus.md agents/prometheus.md agents/qa-tester.md agents/writer.md)
-SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval)
+SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval skill-creator handoff)
 
 log() { echo "[oh-my-kiro-cli] $1"; }
 warn() { echo "[oh-my-kiro-cli] WARNING: $1" >&2; }
@@ -120,15 +120,12 @@ done
 log "Installed ${#PROMPT_FILES[@]} prompts"
 
 for skill in "${SKILLS[@]}"; do
-  skill_source="$SOURCE_ROOT/skills/${skill}/SKILL.md"
-  skill_target="$KIRO_HOME/skills/${skill}/SKILL.md"
-  if [ -f "$skill_source" ]; then
-    backup_path "$skill_target" "skills/${skill}/SKILL.md"
-    mkdir -p "$KIRO_HOME/skills/${skill}"
-    cp "$skill_source" "$skill_target"
-    if [ -d "$SOURCE_ROOT/skills/${skill}/references" ]; then
-      cp -R "$SOURCE_ROOT/skills/${skill}/references" "$KIRO_HOME/skills/${skill}/"
-    fi
+  skill_source_dir="$SOURCE_ROOT/skills/${skill}"
+  skill_target_dir="$KIRO_HOME/skills/${skill}"
+  if [ -f "$skill_source_dir/SKILL.md" ]; then
+    backup_path "$skill_target_dir" "skills/${skill}"
+    mkdir -p "$skill_target_dir"
+    rsync -a --exclude='__pycache__' "$skill_source_dir/" "$skill_target_dir/"
   fi
 done
 log "Installed ${#SKILLS[@]} skills"
