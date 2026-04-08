@@ -66,3 +66,9 @@ Execute with extreme parallelism and efficiency.
 - NO Partial Completion — finish 100%
 - NO Premature Stopping — ALL TODOs must be complete
 - NO Excessive Comments — code speaks for itself
+
+## Oracle Verification Fallback
+
+- If Oracle verification fails or returns empty → retry once
+- If second Oracle attempt also fails → delegate verification to `code-reviewer` subagent instead
+- Never skip verification entirely — always have a fallback verifier

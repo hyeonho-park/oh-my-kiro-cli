@@ -42,6 +42,27 @@ When you believe the task is complete:
 3. If Oracle approves → output completion confirmation
 4. If Oracle finds issues → fix them, then repeat verification
 
+### Promise Detection
+
+Before marking any todo as completed, scan the result for promise language:
+- "will do", "going to", "plan to", "intend to", "about to"
+- If promise language is found without corresponding evidence of completion → the todo is NOT done
+- Continue working until the promised action is actually performed and verified
+
+### Oracle VERIFIED Gate
+
+Oracle verification is only accepted when the response contains explicit approval keywords:
+- VERIFIED, APPROVED, PASSES, CONFIRMED
+- Vague responses ("looks good", "seems fine", "should be okay") do NOT count as verification
+- If Oracle response lacks an explicit keyword → treat as unverified and request a clear verdict
+
+### Stale Oracle Recovery
+
+If Oracle subagent returns empty, errors, or takes no action:
+1. Retry Oracle once
+2. If second attempt also fails → fall back to `code-reviewer` subagent for verification
+3. Do not wait indefinitely for a non-responsive Oracle
+
 ### ZERO TOLERANCE
 
 - NO Scope Reduction — deliver FULL implementation
