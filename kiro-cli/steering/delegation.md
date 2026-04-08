@@ -71,6 +71,22 @@ Do NOT invent machine-readable XML, JSON envelopes, or fake protocol markers unl
 - If a task can fail in multiple ways, ask the subagent to distinguish root cause from symptoms.
 - If the result will feed another step, ask for the exact decision it should unblock.
 
+## Turn Limit Awareness
+
+- Simple, well-scoped tasks (single file edit, lookup) → `executor` (fast, focused)
+- Complex multi-step tasks (cross-file changes, architecture) → `hephaestus` (autonomous, deep)
+- Do not send complex work to executor — it cannot re-delegate or recover from ambiguity
+- Do not send trivial work to hephaestus — it wastes capacity
+- When delegating, estimate complexity: trivial (1-2 tool calls), moderate (3-10), complex (10+)
+
+
+## Subagent Communication Language
+
+- Delegate to subagents in English — queries, task descriptions, and expected outcomes should be in English
+- Subagent responses are expected in English for consistency and token efficiency
+- Final user-facing responses remain in the user's language (Korean, etc.)
+- This applies to all agent-to-agent communication via use_subagent
+
 ## Deep Parallel Delegation
 
 When a task decomposes into multiple independent work units:
