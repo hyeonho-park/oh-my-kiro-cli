@@ -24,6 +24,10 @@
   "hooks": {
     "preToolUse": [
       {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/hanging-command-blocker.sh\""
+      },
+      {
         "matcher": "fs_write",
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/comment-checker.sh\""
       },
@@ -43,6 +47,10 @@
     "postToolUse": [
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/circuit-breaker.sh\""
+      },
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/slow-command-detector.sh\""
       },
       {
         "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/context-window-reminder.sh\""
@@ -80,7 +88,13 @@
       "autoAllowReadonly": true,
       "deniedCommands": [
         "rm .*",
-        "rm -.*"
+        "rm -.*",
+        "tail\\s+.*(-f|--follow)",
+        "^watch\\s",
+        "^(less|more|man)\\s",
+        "^(vim|vi|nano|emacs)\\b",
+        "^(htop)$",
+        "^docker\\s+attach"
       ],
       "allowedCommands": [
         "trash .*"
