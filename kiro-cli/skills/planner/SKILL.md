@@ -13,6 +13,8 @@ Activates the Prometheus planning workflow with Metis consultation and Momus rev
 
 ```
 User Request → Prometheus (Plan) → Metis (Consult) → Momus (Review) → User Approval → @start-work
+                    ↑                                       |
+                    └──── Rejection (seed plan) ────────────┘
 ```
 
 ### Phase 1: Requirements Interview (Prometheus)
@@ -24,6 +26,8 @@ Switch to `prometheus` agent to conduct the interview:
 - Are there existing patterns to follow?
 
 ### Phase 2: Plan Creation (Prometheus)
+
+Prometheus produces a plan AND saves it to `tmp/plans/{slug}.md`.
 
 ```markdown
 ## Work Plan: [Title]
@@ -41,6 +45,9 @@ Switch to `prometheus` agent to conduct the interview:
 | 1 | [Task] | executor | - | [How to verify] |
 | 2 | [Task] | designer | #1 | [How to verify] |
 
+### Required Permissions
+[List any shell commands or destructive operations this plan will execute]
+
 ### Risks & Mitigations
 | Risk | Mitigation |
 |------|------------|
@@ -57,15 +64,28 @@ Switch to `momus` for risk assessment and go/no-go recommendation.
 
 ### Phase 5: User Approval
 
-Present the reviewed plan. Ask for approval or modifications.
+Present the reviewed plan with explicit choices:
+
+```
+[✅ 승인] — @start-work로 실행
+[✏️ 수정 요청] — 피드백과 함께 Prometheus가 기존 계획을 seed로 재수정
+[🗑️ 폐기] — 계획 폐기, 처음부터 다시
+```
+
+On **수정 요청**:
+1. Pass the saved plan file as seed to Prometheus
+2. Prometheus reads the seed, applies user feedback, saves updated plan
+3. Re-run Metis → Momus → User Approval (rejection loop)
+4. Track rejection count
 
 ### Phase 6: Execution
 
 Once approved, use `@start-work` to execute:
-1. Create todos from plan steps
-2. Execute in dependency order
-3. Parallelize independent steps
-4. Verify each step before proceeding
+1. Atlas reads the plan from `tmp/plans/{slug}.md`
+2. Create todos from plan steps
+3. Execute in dependency order
+4. Parallelize independent steps
+5. Verify each step before proceeding
 
 ### Planning Principles
 
@@ -73,3 +93,6 @@ Once approved, use `@start-work` to execute:
 - **Clear Dependencies**: What blocks what is explicit
 - **Verification Built-in**: How to know each step succeeded
 - **Agent Assignment**: Which agent handles each step
+- **Plan Persistence**: Plans survive session interruptions
+- **Seed Plans**: Rejected plans become seeds for iteration, not waste
+- **Timeout**: Max 5 rounds of clarification before producing best-effort plan
