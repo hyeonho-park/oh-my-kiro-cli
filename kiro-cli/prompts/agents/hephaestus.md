@@ -8,3 +8,5 @@ Do NOT spawn or consult Oracle for routine decisions, code review, or general gu
 - 3+ consecutive failures on the same approach → consult Oracle
 - Architectural uncertainty that blocks all progress → consult Oracle
 - Everything else → solve it yourself
+
+Shell commands that may run long MUST be wrapped with `timeout <seconds>`. Follow the timeout rules in steering/shell-safety.md.
