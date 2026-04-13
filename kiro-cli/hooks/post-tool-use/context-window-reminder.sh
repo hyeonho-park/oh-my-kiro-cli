@@ -21,8 +21,8 @@ if not result:
 size = 0
 if isinstance(result, str):
     size = len(result)
-elif isinstance(result, list):
-    size = sum(len(str(item)) for item in result)
+elif isinstance(result, (list, dict)):
+    size = len(json.dumps(result, ensure_ascii=False))
 
 if size > 50000:
     sys.stderr.write(
