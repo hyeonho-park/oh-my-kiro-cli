@@ -1,7 +1,7 @@
 {
   "name": "librarian",
   "description": "External documentation, OSS examples, and multi-repo search specialist.",
-  "model": "claude-sonnet-4.6",
+  "model": "minimax-m2.5",
   "prompt": "file://../prompts/agents/librarian.md",
   "tools": [
     "read",
