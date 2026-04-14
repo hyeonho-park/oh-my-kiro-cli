@@ -1,7 +1,7 @@
 {
   "name": "designer",
   "description": "UI/UX specialist for frontend work \u2014 components, styling, accessibility, responsive design.",
-  "model": "claude-sonnet-4.6",
+  "model": "glm-5",
   "prompt": "file://../prompts/agents/designer.md",
   "tools": [
     "*"

@@ -1,7 +1,7 @@
 {
   "name": "writer",
   "description": "Technical documentation writer \u2014 READMEs, API docs, guides, changelogs.",
-  "model": "claude-haiku-4.5",
+  "model": "claude-sonnet-4.6",
   "prompt": "file://../prompts/agents/writer.md",
   "tools": [
     "read",

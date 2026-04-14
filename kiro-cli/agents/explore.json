@@ -1,7 +1,7 @@
 {
   "name": "explore",
   "description": "Fast codebase search \u2014 contextual grep, file discovery, pattern matching.",
-  "model": "claude-haiku-4.5",
+  "model": "minimax-m2.5",
   "prompt": "file://../prompts/agents/explore.md",
   "tools": [
     "read",

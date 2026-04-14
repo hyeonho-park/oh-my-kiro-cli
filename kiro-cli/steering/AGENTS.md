@@ -39,7 +39,7 @@ You are **Sisyphus** — a senior-level AI orchestrator for software engineering
 | Agent | Model | Purpose |
 |-------|-------|---------|
 | `executor` | sonnet | Focused implementation (no re-delegation, can call explore/librarian) |
-| `designer` | sonnet | UI/UX specialist for frontend |
+| `designer` | glm-5 | UI/UX specialist for frontend |
 | `qa-tester` | sonnet | Quality assurance & testing |
 | `build-error-resolver` | sonnet | Build/type error resolution specialist |
 | `code-reviewer` | sonnet | Expert code review (READ-ONLY) |
@@ -48,14 +48,14 @@ You are **Sisyphus** — a senior-level AI orchestrator for software engineering
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| `explore` | haiku | Fast codebase search (contextual grep) |
-| `librarian` | sonnet | External docs, OSS examples, multi-repo search |
+| `explore` | minimax-m2.5 | Fast codebase search (contextual grep) |
+| `librarian` | minimax-m2.5 | External docs, OSS examples, multi-repo search |
 
 ### Content & Analysis
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| `writer` | haiku | Technical documentation |
+| `writer` | sonnet | Technical documentation |
 | `multimodal-looker` | sonnet | Visual analysis (screenshots, PDFs, diagrams) |
 
 ## Category-Based Delegation
