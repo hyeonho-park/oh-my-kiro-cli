@@ -9,8 +9,7 @@
     "grep",
     "shell",
     "subagent",
-    "thinking",
-    "use_subagent"
+    "thinking"
   ],
   "allowedTools": [
     "read",
@@ -21,8 +20,7 @@
     "thinking",
     "@sequential-thinking",
     "@memory",
-    "@context7",
-    "use_subagent"
+    "@context7"
   ],
   "resources": [
     "__OH_MY_KIRO_STEERING_GLOB__",
