@@ -8,10 +8,10 @@ INSTALL_HOOK_ROOT="${KIRO_HOME}/hooks/oh-my-kiro-cli"
 BACKUP_DIR="${KIRO_HOME}/backups/oh-my-kiro-cli-$(date +%Y%m%d-%H%M%S)"
 META_FILE="${KIRO_HOME}/.oh-my-kiro-cli-meta"
 
-AGENTS=(sisyphus oracle prometheus metis momus analyst hephaestus atlas executor designer qa-tester build-error-resolver code-reviewer librarian multimodal-looker explore writer)
+AGENTS=(sisyphus oracle prometheus metis momus analyst hephaestus atlas executor designer qa-tester build-error-resolver code-reviewer librarian multimodal-looker explore writer kb-searcher kb-curator)
 STEERING_FILES=(AGENTS.md workflow.md delegation.md constraints.md verification.md coding-style.md git-workflow.md testing.md patterns.md)
-PROMPT_FILES=(sisyphus-system.md planner.md start-work.md handoff.md code-review.md ralph-loop.md ulw-loop.md refactor.md build-fix.md agents/oracle.md agents/analyst.md agents/code-reviewer.md agents/explore.md agents/librarian.md agents/metis.md agents/momus.md agents/multimodal-looker.md agents/atlas.md agents/build-error-resolver.md agents/designer.md agents/executor.md agents/hephaestus.md agents/prometheus.md agents/qa-tester.md agents/writer.md)
-SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval skill-creator handoff)
+PROMPT_FILES=(sisyphus-system.md planner.md start-work.md handoff.md code-review.md ralph-loop.md ulw-loop.md refactor.md build-fix.md agents/oracle.md agents/analyst.md agents/code-reviewer.md agents/explore.md agents/librarian.md agents/metis.md agents/momus.md agents/multimodal-looker.md agents/atlas.md agents/build-error-resolver.md agents/designer.md agents/executor.md agents/hephaestus.md agents/prometheus.md agents/qa-tester.md agents/writer.md kb-create.md kb-update.md kb-delete.md kb-query.md kb-lint.md agents/kb-searcher.md agents/kb-curator.md)
+SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval skill-creator handoff kb-create kb-update kb-delete kb-query kb-lint)
 
 log() { echo "[oh-my-kiro-cli] $1"; }
 warn() { echo "[oh-my-kiro-cli] WARNING: $1" >&2; }
@@ -130,6 +130,17 @@ for skill in "${SKILLS[@]}"; do
 done
 log "Installed ${#SKILLS[@]} skills"
 
+# Install kb references and wiki-schema templates
+if [[ -d "$SOURCE_ROOT/skills/references" ]]; then
+  mkdir -p "$KIRO_HOME/skills/references/wiki-schema"
+  cp "$SOURCE_ROOT/skills/references/SCHEMA_CHEATSHEET.md" "$KIRO_HOME/skills/references/"
+  cp "$SOURCE_ROOT/skills/references/WIKI_ANALYSIS_KNOWLEDGE.md" "$KIRO_HOME/skills/references/"
+  cp "$SOURCE_ROOT/skills/references/wiki-schema/"* "$KIRO_HOME/skills/references/wiki-schema/"
+fi
+
+# Create wikis parent directory for kb-* multi-wiki support
+mkdir -p "$KIRO_HOME/wikis"
+
 merge_cli_settings "$SOURCE_ROOT/settings/cli.json" "$KIRO_HOME/settings/cli.json" "settings/cli.json"
 log "Merged CLI settings"
 
@@ -157,6 +168,7 @@ steering=${STEERING_FILES[*]}
 prompts=${PROMPT_FILES[*]}
 skills=${SKILLS[*]}
 mcp_managed=${MCP_MANAGED}
+references_managed=1
 EOF
 
 SHELL_RC=""
@@ -186,3 +198,8 @@ log "  Hooks:    12"
 log "Backup: ${BACKUP_DIR}"
 log ""
 log "Run 'source ${SHELL_RC:-~/.zshrc}' then type 'omk' to start."
+
+# Graphify hint
+if ! command -v graphify &>/dev/null; then
+  echo "Hint: install graphify with 'pip install graphifyy' for wiki graph features."
+fi

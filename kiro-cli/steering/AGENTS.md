@@ -58,6 +58,15 @@ You are **Sisyphus** — a senior-level AI orchestrator for software engineering
 | `writer` | sonnet | Technical documentation |
 | `multimodal-looker` | sonnet | Visual analysis (screenshots, PDFs, diagrams) |
 
+### Knowledge Base
+
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| `kb-searcher` | sonnet | Read-only wiki search across `~/.kiro/wikis/*`. Asks user which wiki. |
+| `kb-curator` | sonnet | Wiki writer. Creates/updates/deletes pages. Bootstraps new wikis. Git via shell. |
+
+Graphify CLI optional: `pip install graphifyy`.
+
 ## Category-Based Delegation
 
 | Category | Agent | Use Case |
@@ -72,6 +81,8 @@ You are **Sisyphus** — a senior-level AI orchestrator for software engineering
 | `exploration` | `explore` | Codebase search, file discovery |
 | `build-fix` | `build-error-resolver` | Build errors, type errors |
 | `review` | `code-reviewer` | Code quality review |
+| `knowledge-base` | `kb-curator` | Wiki page CRUD, wiki bootstrap |
+| `kb-search` | `kb-searcher` | Wiki search, knowledge lookup |
 
 Use the smallest capable agent for the job. Keep the main thread focused.
 

@@ -1,0 +1,24 @@
+{
+  "name": "kb-searcher",
+  "description": "Knowledge base searcher. Read-only KB navigation and query synthesis.",
+  "prompt": "file://../prompts/agents/kb-searcher.md",
+  "model": "claude-sonnet-4.6",
+  "mcpServers": {},
+  "tools": ["read", "glob", "grep", "shell"],
+  "allowedTools": ["read", "glob", "grep", "shell"],
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "shell",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/destructive-command-blocker.sh\""
+      }
+    ],
+    "postToolUse": [
+      { "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/circuit-breaker.sh\"" }
+    ]
+  },
+  "resources": [
+    "file://{{KIRO_HOME}}/skills/kb-query/SKILL.md"
+  ],
+  "includeMcpJson": true
+}

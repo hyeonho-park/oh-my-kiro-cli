@@ -5,10 +5,10 @@ KIRO_HOME="${KIRO_HOME:-${HOME}/.kiro}"
 META_FILE="${KIRO_HOME}/.oh-my-kiro-cli-meta"
 BACKUP_DIR=""
 MCP_MANAGED=""
-AGENTS=(sisyphus oracle prometheus metis momus analyst hephaestus atlas executor designer qa-tester build-error-resolver code-reviewer librarian multimodal-looker explore writer)
+AGENTS=(sisyphus oracle prometheus metis momus analyst hephaestus atlas executor designer qa-tester build-error-resolver code-reviewer librarian multimodal-looker explore writer kb-searcher kb-curator)
 STEERING_FILES=(AGENTS.md workflow.md delegation.md constraints.md verification.md coding-style.md git-workflow.md testing.md patterns.md)
-PROMPT_FILES=(sisyphus-system.md planner.md start-work.md handoff.md code-review.md ralph-loop.md ulw-loop.md refactor.md build-fix.md agents/oracle.md agents/analyst.md agents/code-reviewer.md agents/explore.md agents/librarian.md agents/metis.md agents/momus.md agents/multimodal-looker.md agents/atlas.md agents/build-error-resolver.md agents/designer.md agents/executor.md agents/hephaestus.md agents/prometheus.md agents/qa-tester.md agents/writer.md)
-SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval)
+PROMPT_FILES=(sisyphus-system.md planner.md start-work.md handoff.md code-review.md ralph-loop.md ulw-loop.md refactor.md build-fix.md agents/oracle.md agents/analyst.md agents/code-reviewer.md agents/explore.md agents/librarian.md agents/metis.md agents/momus.md agents/multimodal-looker.md agents/atlas.md agents/build-error-resolver.md agents/designer.md agents/executor.md agents/hephaestus.md agents/prometheus.md agents/qa-tester.md agents/writer.md kb-create.md kb-update.md kb-delete.md kb-query.md kb-lint.md agents/kb-searcher.md agents/kb-curator.md)
+SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval kb-create kb-update kb-delete kb-query kb-lint)
 HOOK_ROOT="${KIRO_HOME}/hooks/oh-my-kiro-cli"
 
 log() { echo "[oh-my-kiro-cli] $1"; }
@@ -65,6 +65,13 @@ restore_or_remove "$KIRO_HOME/settings/cli.json" "settings/cli.json"
 if [ "$MCP_MANAGED" = "1" ]; then
   restore_or_remove "$KIRO_HOME/settings/mcp.json" "settings/mcp.json"
 fi
+
+if grep -q 'references_managed=1' "$META_FILE" 2>/dev/null; then
+  rm -f "$KIRO_HOME/skills/references/SCHEMA_CHEATSHEET.md"
+  rm -f "$KIRO_HOME/skills/references/WIKI_ANALYSIS_KNOWLEDGE.md"
+  rm -rf "$KIRO_HOME/skills/references/wiki-schema"
+fi
+
 rm -f "$META_FILE"
 
 log "Removed oh-my-kiro-cli assets from ${KIRO_HOME}"

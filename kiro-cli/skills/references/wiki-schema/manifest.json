@@ -1,0 +1,479 @@
+{
+  "troubleshooting": [
+    {
+      "canonical_id": "aws-ec2-live-migration-transient-issues",
+      "title": "AWS EC2 Live Migration 순간적 장애 패턴",
+      "domain": "troubleshooting",
+      "tags": ["aws", "ec2", "live-migration", "ebs", "cpu", "volumethroughput", "transient", "incident"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/aws-ec2-live-migration-transient-issues.md"
+    },
+    {
+      "canonical_id": "aws-nat-gateway-port-exhaustion-sqs-2020",
+      "title": "AWS NAT Gateway 포트 고갈 - SQS 트래픽 집중으로 인한 ErrorPortAllocation (2020-11)",
+      "domain": "troubleshooting",
+      "tags": ["aws", "nat-gateway", "sqs", "ErrorPortAllocation", "IdleTimeoutCount", "privatelink", "port-exhaustion", "P1"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/aws-nat-gateway-port-exhaustion-sqs-2020.md"
+    },
+    {
+      "canonical_id": "kcp-payment-timeout-time-wait-2023",
+      "title": "KCP 거래등록 Timeout - AWS NAT TCP TIME_WAIT 포트 충돌 (2023-10 ~ 2024-03)",
+      "domain": "troubleshooting",
+      "tags": ["kcp", "payment", "timeout", "tcp", "time-wait", "nat-gateway", "billing", "pg", "network", "P2"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/kcp-payment-timeout-time-wait-2023.md"
+    },
+    {
+      "canonical_id": "alb-5xx-elb-metric-causes",
+      "title": "ALB HTTPCode_ELB_5XX_Count 증가 원인 분류 (6가지 시나리오)",
+      "domain": "troubleshooting",
+      "tags": ["alb", "elb", "5xx", "cloudwatch", "metrics", "troubleshooting", "aws", "load-balancer", "502", "503", "504"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/alb-5xx-elb-metric-causes.md"
+    },
+    {
+      "canonical_id": "elb-az-subnet-registration-vs-activation",
+      "title": "ELB AZ 서브넷 등록 vs AZ 활성화 — 무음 트래픽 장애",
+      "domain": "troubleshooting",
+      "tags": ["aws", "elb", "alb", "subnet", "az", "vpc", "networking", "P1", "silent-failure"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/elb-az-subnet-registration-vs-activation.md"
+    },
+    {
+      "canonical_id": "aws-us-east-1-dynamodb-dns-outage-2025",
+      "title": "AWS us-east-1 대규모 장애 - DynamoDB DNS Enactor 레이스 컨디션 (2025-10-19, 14시간)",
+      "domain": "troubleshooting",
+      "tags": ["aws", "us-east-1", "dynamodb", "dns", "outage", "P0", "ec2", "nlb", "lambda", "ecs", "eks", "fargate", "region-wide", "cascade-failure"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/aws-us-east-1-dynamodb-dns-outage-2025.md"
+    },
+    {
+      "canonical_id": "coredns-toleration-addon-manager-overwrite",
+      "title": "CoreDNS toleration이 eks:addon-manager에 의해 주기적으로 초기화되는 문제",
+      "domain": "troubleshooting",
+      "tags": ["coredns", "eks", "addon-manager", "toleration", "managed-addon", "self-managed", "node-scheduling"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/coredns-toleration-addon-manager-overwrite.md"
+    },
+    {
+      "canonical_id": "cross-account-sg-guide",
+      "title": "계정 간(Cross-Account) 네트워크 통신 트러블슈팅 가이드",
+      "domain": "troubleshooting",
+      "tags": ["cross-account", "security-group", "sgp", "eks", "network", "vpc-peering", "nacl", "kafka", "elasticache", "alb"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/cross-account-sg-guide.md"
+    },
+    {
+      "canonical_id": "eks-alb-webhook-sg-missing",
+      "title": "ALB Controller Webhook 통신 불가 (9443 포트 SG 누락)",
+      "domain": "troubleshooting",
+      "tags": ["alb-controller", "aws-load-balancer-controller", "webhook", "security-group", "9443", "control-plane", "node-group", "eks", "network"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-alb-webhook-sg-missing.md"
+    },
+    {
+      "canonical_id": "eks-argocd-429-multi-source-cache-bug",
+      "title": "ArgoCD Multi-Source Helm 앱 GitHub 429 Rate Limit - 캐시 미동작 버그",
+      "domain": "troubleshooting",
+      "tags": ["argocd", "429", "rate-limit", "multi-source", "helm", "cache", "gitops", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-argocd-429-multi-source-cache-bug.md"
+    },
+    {
+      "canonical_id": "eks-control-plane-log-shipper-throttling",
+      "title": "EKS Control Plane Log Shipper Lambda Throttling - CW Logs 아키텍처 한계",
+      "domain": "troubleshooting",
+      "tags": ["cloudwatch", "lambda", "throttling", "log-shipper", "control-plane", "eks", "argocd", "burrow"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-control-plane-log-shipper-throttling.md"
+    },
+    {
+      "canonical_id": "eks-dns-ingress-troubleshooting",
+      "title": "EKS DNS·Ingress·Kyverno Webhook 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["dns", "ingress", "kyverno", "webhook", "external-dns", "nat", "route53", "alb", "nodeport", "vpc-endpoint", "wafv2", "cmdb-labels", "failurepolicy"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-dns-ingress-troubleshooting.md"
+    },
+    {
+      "canonical_id": "eks-etcd-api-latency-troubleshooting",
+      "title": "EKS ETCD 장애 및 Kube API Latency 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["eks", "etcd", "api-latency", "ebs", "kyverno", "control-plane", "P1", "P2"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-etcd-api-latency-troubleshooting.md"
+    },
+    {
+      "canonical_id": "eks-etcd-space-quota-exceeded",
+      "title": "ETCD Space Quota 초과로 인한 Cilium Agent 크래시 및 복구 (compact/defrag/alarm disarm)",
+      "domain": "troubleshooting",
+      "tags": ["etcd", "space-quota", "cilium", "compact", "defrag", "nospace", "eks", "kops", "vpc-cni", "P1"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-etcd-space-quota-exceeded.md"
+    },
+    {
+      "canonical_id": "eks-evented-pleg-bind-address-conflict",
+      "title": "EKS AMI 업그레이드 후 'bind: address already in use' - EventedPLEG 버그",
+      "domain": "troubleshooting",
+      "tags": ["pleg", "evented-pleg", "containerd", "ami", "bind-address", "duplicate-container", "eks", "kubelet"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-evented-pleg-bind-address-conflict.md"
+    },
+    {
+      "canonical_id": "eks-fluent-bit-serviceaccount-token-refresh",
+      "title": "fluent-bit Pod ServiceAccount 토큰 갱신 실패 - k8s 1.21 BoundServiceAccountTokenVolume",
+      "domain": "troubleshooting",
+      "tags": ["fluent-bit", "serviceaccount", "token-refresh", "bound-sa-token", "k8s-1.21", "403", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-fluent-bit-serviceaccount-token-refresh.md"
+    },
+    {
+      "canonical_id": "eks-fsgroup-pod-startup-delay",
+      "title": "Pod SecurityContext fsGroup으로 인한 Pod 시작 지연",
+      "domain": "troubleshooting",
+      "tags": ["pod", "securitycontext", "fsgroup", "ebs", "pv", "chown", "kubelet", "startup-delay", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-fsgroup-pod-startup-delay.md"
+    },
+    {
+      "canonical_id": "eks-gitlab-runner-provisioning-delay",
+      "title": "GitLab Runner 프로비저닝 지연 - vpc-cni IP 풀 고갈 및 containerd initContainer 삭제 지연",
+      "domain": "troubleshooting",
+      "tags": ["gitlab-runner", "vpc-cni", "ip-pool", "containerd", "init-container", "provisioning", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-gitlab-runner-provisioning-delay.md"
+    },
+    {
+      "canonical_id": "eks-helm-release-name-conflict",
+      "title": "Helm release-name annotation 충돌 - non-Helm 배포 리소스에 Helm 재배포 시 실패",
+      "domain": "troubleshooting",
+      "tags": ["helm", "release-name", "annotation", "pulumi", "eks", "deployment"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-helm-release-name-conflict.md"
+    },
+    {
+      "canonical_id": "eks-helm-secret-cleanup-reuse-error",
+      "title": "Helm release Secret 잔여물로 인한 'cannot re-use a name' 재배포 실패",
+      "domain": "troubleshooting",
+      "tags": ["helm", "secret", "release", "cleanup", "eks", "deployment"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-helm-secret-cleanup-reuse-error.md"
+    },
+    {
+      "canonical_id": "eks-irsa-cross-account-assume-failure",
+      "title": "EKS IRSA Cross-Account Assume 실패 - ~/.aws/config credential_source 오설정",
+      "domain": "troubleshooting",
+      "tags": ["irsa", "cross-account", "assume-role", "web-identity-token", "aws-config", "jenkins", "eks", "p01-simploy-prod-001"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-irsa-cross-account-assume-failure.md"
+    },
+    {
+      "canonical_id": "eks-istio-envoy-5xx-xds-delay",
+      "title": "커머스 플랫폼 Envoy 간헐적 5xx - istio xDS Push 지연",
+      "domain": "troubleshooting",
+      "tags": ["istio", "envoy", "5xx", "xds", "endpoints", "debounce", "spot", "gateway-api", "eks", "P1"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-istio-envoy-5xx-xds-delay.md"
+    },
+    {
+      "canonical_id": "eks-kubectl-auth-troubleshooting",
+      "title": "EKS kubectl/kubectx 인증 오류 및 접속 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["kubectl", "kubectx", "plugin", "oidc", "authentication", "eks", "windows", "m7i-flex", "credentials", "unauthorized", "P1", "P2"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-kubectl-auth-troubleshooting.md"
+    },
+    {
+      "canonical_id": "eks-kubelet-gc-disk-cleanup-failure",
+      "title": "EKS kubelet GC 미동작 및 종료된 Pod 데이터 미삭제로 인한 디스크 사용률 증가",
+      "domain": "troubleshooting",
+      "tags": ["kubelet", "gc", "container-cleanup", "image-gc", "disk", "vpc-cni", "sgp", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-kubelet-gc-disk-cleanup-failure.md"
+    },
+    {
+      "canonical_id": "eks-miscellaneous-operations",
+      "title": "EKS 기타 운영 이슈 모음 - Karpenter, ETCD, DNS, NodePort, Kyverno",
+      "domain": "troubleshooting",
+      "tags": ["eks", "karpenter", "etcd", "kyverno", "external-dns", "nat-gateway", "vpc-endpoint", "nodeport", "pod-ip", "dns", "pdb", "consolidation", "prometheus", "cloudwatch", "az-mismatch", "P1", "P2"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-miscellaneous-operations.md"
+    },
+    {
+      "canonical_id": "eks-monitoring-resource-management",
+      "title": "EKS 모니터링 리소스 관리 - Prometheus OOM, PDB 롤링업데이트 차단, CloudWatch 비용 급증, AZ 불일치 Pending",
+      "domain": "troubleshooting",
+      "tags": ["prometheus", "monitoring", "oom", "pdb", "cloudwatch", "cost", "az-mismatch", "grafana", "eks", "P0", "P1", "P2"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-monitoring-resource-management.md"
+    },
+    {
+      "canonical_id": "eks-namespace-terminating-finalizers",
+      "title": "Namespace Terminating 고착 - Finalizer 차단 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["namespace", "terminating", "finalizers", "apiservice", "eks", "deletion"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-namespace-terminating-finalizers.md"
+    },
+    {
+      "canonical_id": "eks-node-disk-performance-tuning",
+      "title": "EKS 노드 디스크 성능 튜닝 - Throughput 병목 및 IOPS 부족 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["eks", "disk", "ebs", "iops", "throughput", "nodeclass", "kubelet", "gitlab-runner", "karpenter", "batch"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-node-disk-performance-tuning.md"
+    },
+    {
+      "canonical_id": "eks-operational-lessons-learned",
+      "title": "EKS 운영 교훈 모음 - EBS 디바이스명 불일치, Log Insight 알람 한계, ALB Controller CRD 업그레이드",
+      "domain": "troubleshooting",
+      "tags": ["eks", "lessons-learned", "ebs", "cloudwatch", "log-insight", "alb-controller", "crd", "operations"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-operational-lessons-learned.md"
+    },
+    {
+      "canonical_id": "eks-pod-eni-ip-exhaustion",
+      "title": "EKS ENABLE_POD_ENI Trunk ENI로 인한 노드 IP 고갈 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["eks", "cni", "eni", "trunk-eni", "ip-exhaustion", "max-pods", "sgp", "vpc-cni", "m6i", "karpenter"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-pod-eni-ip-exhaustion.md"
+    },
+    {
+      "canonical_id": "eks-pod-start-stop-delay-analysis",
+      "title": "EKS Pod 시작/종료 지연 분석 및 containerd 마이그레이션",
+      "domain": "troubleshooting",
+      "tags": ["kubelet", "pleg", "containerd", "dockerd", "pod-delay", "cri-api", "goroutine", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-pod-start-stop-delay-analysis.md"
+    },
+    {
+      "canonical_id": "eks-thanos-integration-issues",
+      "title": "EKS Thanos 연동 이슈 - S3 접근 오류 및 ALB gRPC 연결 실패",
+      "domain": "troubleshooting",
+      "tags": ["thanos", "prometheus", "s3", "grpc", "alb", "nlb", "ingress", "tls", "eks", "iam", "bucket-policy", "irsa", "woowacat"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-thanos-integration-issues.md"
+    },
+    {
+      "canonical_id": "eks-vpc-cni-warm-ip-configuration",
+      "title": "EKS vpc-cni WARM_IP_TARGET/MINIMUM_IP_TARGET 설정 가이드 및 IP 할당 실패 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["vpc-cni", "warm-ip-target", "minimum-ip-target", "ip-assign", "ipamd", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-vpc-cni-warm-ip-configuration.md"
+    },
+    {
+      "canonical_id": "irsa-setup-guide",
+      "title": "IRSA(IAM Roles for Service Accounts) 설정 가이드 및 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["irsa", "iam", "eks", "oidc", "trust-relationship", "batch-platform", "k8s-migration"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/irsa-setup-guide.md"
+    },
+    {
+      "canonical_id": "sg-rule-gaps-troubleshooting",
+      "title": "Security Group 룰 누락 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["security-group", "eks", "network", "policy-k8s-was", "node-group-common-sg", "cross-account", "pod-communication", "inbound-rule", "outbound-rule"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/sg-rule-gaps-troubleshooting.md"
+    },
+    {
+      "canonical_id": "sgp-configuration-guide",
+      "title": "SGP(SecurityGroupPolicy) 설정 가이드 및 트러블슈팅",
+      "domain": "troubleshooting",
+      "tags": ["sgp", "security-group", "eks", "network", "policy-k8s-was", "node-group-common-sg", "cross-account", "batch-platform"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/sgp-configuration-guide.md"
+    },
+    {
+      "canonical_id": "thanos-sidecar-burstable-qos-kubelet-down",
+      "title": "thanos-sidecar 리소스 미설정으로 인한 Burstable QoS 노드 메모리 고갈 및 kubelet 다운",
+      "domain": "troubleshooting",
+      "tags": ["thanos", "prometheus", "kubelet", "oom", "burstable-qos", "node-memory", "P0", "monitoring", "cgroup"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/thanos-sidecar-burstable-qos-kubelet-down.md"
+    },
+    {
+      "canonical_id": "tld-dns-outage-woowa-in",
+      "title": ".in TLD DNS 장애 - woowa.in NXDOMAIN (2026-04-09)",
+      "domain": "troubleshooting",
+      "tags": ["dns", "tld", "nxdomain", "woowa.in", "centralnic", "tucows", "aws-support", "P1", "outage", "dns-ttl"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/tld-dns-outage-woowa-in.md"
+    },
+    {
+      "canonical_id": "vpc-cni-disable-tcp-early-demux",
+      "title": "vpc-cni Addon 업그레이드 시 DISABLE_TCP_EARLY_DEMUX 초기화로 SGP Pod 헬스프로브 실패",
+      "domain": "troubleshooting",
+      "tags": ["vpc-cni", "eks", "sgp", "health-probe", "DISABLE_TCP_EARLY_DEMUX", "ENABLE_POD_ENI", "managed-field", "addon-upgrade", "P1"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/vpc-cni-disable-tcp-early-demux.md"
+    },
+    {
+      "canonical_id": "eks-ebs-volume-zone-mismatch",
+      "title": "EBS Volume Zone 불일치로 Pod 구동 실패 (InvalidVolume.ZoneMismatch)",
+      "domain": "troubleshooting",
+      "tags": ["persistent-volume", "node-affinity", "ebs", "zone-mismatch", "eks", "ebs-csi-driver", "P2"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/eks-ebs-volume-zone-mismatch.md"
+    },
+    {
+      "canonical_id": "karpenter-instance-type-consolidation",
+      "title": "Karpenter Consolidation 미동작 — 인스턴스 타입 다양성 문제",
+      "domain": "troubleshooting",
+      "tags": ["karpenter", "nodepool", "consolidation", "instance-type", "cost-optimization", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/troubleshooting/karpenter-instance-type-consolidation.md"
+    }
+  ],
+  "infrastructure": [
+    {
+      "canonical_id": "cmdb-resource-schema-cheatsheet",
+      "title": "CMDB 리소스 스키마 치트시트 - Top 20 필드 경로",
+      "domain": "infrastructure",
+      "tags": ["cmdb", "kubernetes", "aws", "schema", "field-path", "reference"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/infrastructure/cmdb-resource-schema-cheatsheet.md"
+    },
+    {
+      "canonical_id": "eks-karpenter-nodepool-management",
+      "title": "EKS Karpenter NodePool 관리",
+      "domain": "infrastructure",
+      "tags": ["karpenter", "nodepool", "nodeclass", "pdb", "consolidation", "eks", "node-management", "pod-eviction", "arm", "jenkins", "redis", "gitlab-runner", "sonarqube"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/infrastructure/eks-karpenter-nodepool-management.md"
+    },
+    {
+      "canonical_id": "eks-node-creation-speed-benchmark",
+      "title": "Karpenter 노드 생성 속도 벤치마크 - AMI 버전별 부팅·userdata 시간 비교",
+      "domain": "infrastructure",
+      "tags": ["karpenter", "ami", "node-creation", "benchmark", "boot-time", "userdata", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/infrastructure/eks-node-creation-speed-benchmark.md"
+    },
+    {
+      "canonical_id": "eks-rbac-permission-guide",
+      "title": "EKS RBAC 권한 가이드 - edit 권한 범위, Namespace 생성, CRD 권한 추가",
+      "domain": "infrastructure",
+      "tags": ["rbac", "eks", "helm", "clusterrole", "namespace", "crd", "backoffice", "oidc-cache", "k8s-permission"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/infrastructure/eks-rbac-permission-guide.md"
+    },
+    {
+      "canonical_id": "eks-vpc-cni-sgp-internals",
+      "title": "VPC CNI SGP 내부 구현 - Branch ENI, VLAN, POD_SECURITY_GROUP_ENFORCING_MODE",
+      "domain": "infrastructure",
+      "tags": ["vpc-cni", "sgp", "branch-eni", "vlan", "trunk-eni", "network", "eks", "POD_SECURITY_GROUP_ENFORCING_MODE"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/infrastructure/eks-vpc-cni-sgp-internals.md"
+    },
+    {
+      "canonical_id": "aws-networking-policy",
+      "title": "AWS 네트워크 운영 정책 - VPC Full Mesh, SG 템플릿, DB NACL, Private Link",
+      "domain": "infrastructure",
+      "tags": ["aws", "vpc", "peering", "full-mesh", "security-group", "nacl", "db-subnet", "privatelink", "네트워크", "정책", "terraform"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/infrastructure/aws-networking-policy.md"
+    },
+    {
+      "canonical_id": "aws-vpc-cidr-subnet-design",
+      "title": "AWS VPC CIDR / 서브넷 설계 표준",
+      "domain": "infrastructure",
+      "tags": ["aws", "vpc", "cidr", "subnet", "ip-range", "supernetting", "design", "eks"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/infrastructure/aws-vpc-cidr-subnet-design.md"
+    }
+  ],
+  "processes": [
+    {
+      "canonical_id": "eks-ami-version-management",
+      "title": "EKS AMI 버전 관리 및 공유 절차 (핀테크·자체운영 클러스터)",
+      "domain": "processes",
+      "tags": ["eks", "ami", "version", "fintech", "log-rotate", "ec2-hardware", "health-check"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/processes/eks-ami-version-management.md"
+    },
+    {
+      "canonical_id": "eks-cluster-lifecycle",
+      "title": "표준 EKS 클러스터 생명주기 관리 (생성·삭제·업그레이드)",
+      "domain": "processes",
+      "tags": ["eks", "cluster-creation", "cluster-deletion", "blue-green", "gitlab", "jenkins", "karpenter", "atlantis", "terraform", "eks-version-upgrade"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/processes/eks-cluster-lifecycle.md"
+    },
+    {
+      "canonical_id": "eks-otp-reset-procedure",
+      "title": "EKS OTP 초기화 절차 (Keycloak)",
+      "domain": "processes",
+      "tags": ["eks", "otp", "keycloak", "oneid", "backoffice", "authentication"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/processes/eks-otp-reset-procedure.md"
+    }
+  ],
+  "architecture": [],
+  "onboarding": [
+    {
+      "canonical_id": "eks-addon-and-permission-overview",
+      "title": "EKS Add-on 구성 및 권한 구조 온보딩 가이드",
+      "domain": "onboarding",
+      "tags": ["eks", "onboarding", "addon", "coredns", "vpc-cni", "tekton", "external-dns", "permission", "keycloak", "aws-auth"],
+      "status": "current",
+      "last_reviewed": "2026-04-17",
+      "file": "wiki/onboarding/eks-addon-and-permission-overview.md"
+    }
+  ]
+}

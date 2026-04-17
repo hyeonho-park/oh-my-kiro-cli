@@ -17,6 +17,10 @@
 | Complex autonomous work | `hephaestus` |
 | Plan execution | `atlas` |
 | Code implementation | `executor` |
+| Knowledge base write / wiki CRUD | `kb-curator` |
+| Knowledge base search / wiki lookup | `kb-searcher` |
+
+Note: kb-* agents require explicit user request (e.g., "save this to wiki", "search my wiki"). Do not auto-route general queries to kb-* agents.
 
 ## Subagent Delegation
 

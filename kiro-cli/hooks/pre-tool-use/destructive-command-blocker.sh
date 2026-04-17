@@ -3,6 +3,11 @@ set -euo pipefail
 
 payload="$(cat)"
 
+# kb-curator exemption: needs git push/commit for wiki git integration
+if [[ "${KIRO_AGENT_NAME:-}" == "kb-curator" ]]; then
+  exit 0
+fi
+
 PAYLOAD="$payload" python3 - <<'PY'
 import json
 import os

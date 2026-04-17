@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-readonly_agents=(oracle analyst code-reviewer explore librarian metis momus multimodal-looker prometheus)
-execution_agents=(executor hephaestus designer qa-tester build-error-resolver writer)
+readonly_agents=(oracle analyst code-reviewer explore librarian metis momus multimodal-looker prometheus kb-searcher)
+execution_agents=(executor hephaestus designer qa-tester build-error-resolver writer kb-curator)
 externalized_agents=(atlas oracle analyst code-reviewer explore librarian metis momus multimodal-looker prometheus executor hephaestus designer qa-tester build-error-resolver writer)
 
 destructive_hook="$ROOT/kiro-cli/hooks/pre-tool-use/destructive-command-blocker.sh"
@@ -33,8 +33,8 @@ sisyphus = json.loads((agents_dir / "sisyphus.json").read_text())
 if sisyphus.get("prompt") != "file://../prompts/sisyphus-system.md":
     raise SystemExit(f"sisyphus prompt mismatch: {sisyphus.get('prompt')!r}")
 
-readonly_agents = ["oracle", "analyst", "code-reviewer", "explore", "librarian", "metis", "momus", "multimodal-looker", "prometheus"]
-execution_agents = ["executor", "hephaestus", "designer", "qa-tester", "build-error-resolver", "writer"]
+readonly_agents = ["oracle", "analyst", "code-reviewer", "explore", "librarian", "metis", "momus", "multimodal-looker", "prometheus", "kb-searcher"]
+execution_agents = ["executor", "hephaestus", "designer", "qa-tester", "build-error-resolver", "writer", "kb-curator"]
 externalized_agents = ["atlas", "oracle", "analyst", "code-reviewer", "explore", "librarian", "metis", "momus", "multimodal-looker", "prometheus", "executor", "hephaestus", "designer", "qa-tester", "build-error-resolver", "writer"]
 orchestrators = ["sisyphus", "atlas"]
 

@@ -66,7 +66,9 @@
         "librarian",
         "multimodal-looker",
         "explore",
-        "writer"
+        "writer",
+        "kb-searcher",
+        "kb-curator"
       ],
       "trustedAgents": [
         "oracle",
@@ -84,7 +86,9 @@
         "librarian",
         "multimodal-looker",
         "explore",
-        "writer"
+        "writer",
+        "kb-searcher",
+        "kb-curator"
       ]
     }
   },

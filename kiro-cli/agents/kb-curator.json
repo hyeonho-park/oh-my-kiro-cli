@@ -1,0 +1,35 @@
+{
+  "name": "kb-curator",
+  "description": "Knowledge base curator. Sole writer for wiki pages, _index.md, and manifest.json.",
+  "prompt": "file://../prompts/agents/kb-curator.md",
+  "model": "claude-sonnet-4.6",
+  "mcpServers": {},
+  "tools": ["read", "glob", "grep", "shell", "write"],
+  "allowedTools": ["read", "glob", "grep", "shell", "write"],
+  "hooks": {
+    "preToolUse": [
+      { "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/wiki-access-guard.sh\"" },
+      {
+        "matcher": "fs_write",
+        "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/pre-tool-use/secret-leak-detector.sh\""
+      }
+    ],
+    "postToolUse": [
+      { "command": "bash \"__OH_MY_KIRO_HOOK_ROOT__/post-tool-use/circuit-breaker.sh\"" }
+    ]
+  },
+  "resources": [
+    "file://{{KIRO_HOME}}/skills/kb-create/SKILL.md",
+    "file://{{KIRO_HOME}}/skills/kb-update/SKILL.md",
+    "file://{{KIRO_HOME}}/skills/kb-delete/SKILL.md",
+    "file://{{KIRO_HOME}}/skills/references/SCHEMA_CHEATSHEET.md"
+  ],
+  "includeMcpJson": false,
+  "toolsSettings": {
+    "write": {
+      "allowedPaths": [
+        "~/.kiro/wikis/**"
+      ]
+    }
+  }
+}

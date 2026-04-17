@@ -58,7 +58,9 @@
         "librarian",
         "oracle",
         "writer",
-        "code-reviewer"
+        "code-reviewer",
+        "kb-searcher",
+        "kb-curator"
       ],
       "trustedAgents": [
         "executor",
@@ -70,7 +72,9 @@
         "librarian",
         "oracle",
         "writer",
-        "code-reviewer"
+        "code-reviewer",
+        "kb-searcher",
+        "kb-curator"
       ]
     }
   },

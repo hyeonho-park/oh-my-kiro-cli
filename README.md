@@ -50,8 +50,24 @@ Ctrl+V / Ctrl+B / Ctrl+N               # sisyphus / prometheus / executor 토글
 | 분류           | 도구                       | 에이전트                                                                                        |
 | -------------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
 | 오케스트레이터 | subagent, thinking, todo   | sisyphus, atlas                                                                                 |
-| 실행자         | 전체 (write 포함, rm 차단) | executor, hephaestus, designer, qa-tester, build-error-resolver, writer                         |
-| READ-ONLY      | read, glob, grep, shell (`librarian` additionally uses web_search/web_fetch) | oracle, prometheus, metis, momus, analyst, code-reviewer, librarian, explore, multimodal-looker |
+| 실행자         | 전체 (write 포함, rm 차단) | executor, hephaestus, designer, qa-tester, build-error-resolver, writer, kb-curator             |
+| READ-ONLY      | read, glob, grep, shell (`librarian` additionally uses web_search/web_fetch) | oracle, prometheus, metis, momus, analyst, code-reviewer, librarian, explore, multimodal-looker, kb-searcher |
+
+## Wikis (Knowledge Base)
+
+oh-my-kiro-cli includes a built-in LLM Wiki system for managing team knowledge bases.
+
+- Wikis are stored at `~/.kiro/wikis/<wiki-name>/`
+- Use `kb-curator` agent to create, update, and delete wiki pages
+- Use `kb-searcher` agent to search across your wikis
+- Multiple wikis supported — agents ask which wiki to use
+- Optional: connect a wiki to git for version control (just ask kb-curator)
+- Optional: install graphify for wiki graph features: `pip install graphifyy`
+
+### Quick Start
+1. Ask kb-curator: "Create a wiki named my-team"
+2. Ask kb-curator: "Save this information to my-team wiki: ..."
+3. Ask kb-searcher: "Search my-team wiki for ..."
 
 ## 참고
 

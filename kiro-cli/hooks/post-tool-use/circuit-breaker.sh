@@ -19,7 +19,7 @@ tool_input = payload.get("tool_input", "")
 signature = hashlib.md5(json.dumps({"n": tool_name, "i": tool_input}, sort_keys=True).encode()).hexdigest()
 
 state_dir = os.path.expanduser("~/.kiro")
-state_file = os.path.join(state_dir, ".circuit-breaker-state")
+state_file = os.path.join(state_dir, ".infra-circuit-breaker-state")
 
 os.makedirs(state_dir, exist_ok=True)
 
