@@ -100,6 +100,12 @@ for agent_file in agents_dir.glob("*.json"):
         if tool_name in data.get("tools", []) or tool_name in data.get("allowedTools", []):
             raise SystemExit(f"{agent_file.stem} should not expose specialist tool: {tool_name}")
 
+# use_subagent must not appear in any agent's tools or allowedTools (only orchestrators invoke subagents via the runtime)
+for agent_file in agents_dir.glob("*.json"):
+    data = json.loads(agent_file.read_text())
+    if "use_subagent" in data.get("tools", []) or "use_subagent" in data.get("allowedTools", []):
+        raise SystemExit(f"{agent_file.stem} must not list use_subagent in tools/allowedTools")
+
 install_text = (root / "install.sh").read_text()
 uninstall_text = (root / "uninstall.sh").read_text()
 for name in externalized_agents:

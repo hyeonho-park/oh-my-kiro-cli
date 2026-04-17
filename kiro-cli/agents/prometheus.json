@@ -1,7 +1,7 @@
 {
   "name": "prometheus",
   "description": "Strategic planner with interview-style requirement gathering and concrete implementation plans.",
-  "model": "claude-opus-4.6",
+  "model": "claude-opus-4.7",
   "prompt": "file://../prompts/agents/prometheus.md",
   "tools": [
     "read",
@@ -9,8 +9,7 @@
     "grep",
     "shell",
     "subagent",
-    "thinking",
-    "use_subagent"
+    "thinking"
   ],
   "allowedTools": [
     "read",
@@ -21,8 +20,7 @@
     "thinking",
     "@sequential-thinking",
     "@memory",
-    "@context7",
-    "use_subagent"
+    "@context7"
   ],
   "resources": [
     "__OH_MY_KIRO_STEERING_GLOB__",

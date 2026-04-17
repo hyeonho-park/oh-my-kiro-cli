@@ -6,8 +6,7 @@
   "tools": [
     "subagent",
     "thinking",
-    "todo",
-    "use_subagent"
+    "todo"
   ],
   "allowedTools": [
     "subagent",
@@ -15,8 +14,7 @@
     "todo",
     "@sequential-thinking",
     "@memory",
-    "@context7",
-    "use_subagent"
+    "@context7"
   ],
   "resources": [
     "__OH_MY_KIRO_STEERING_GLOB__",

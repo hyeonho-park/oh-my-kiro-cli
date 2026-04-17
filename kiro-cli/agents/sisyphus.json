@@ -1,13 +1,12 @@
 {
   "name": "sisyphus",
   "description": "Main orchestrator \u2014 delegates ALL work to specialist subagents. Cannot read, write, or search files directly.",
-  "model": "claude-opus-4.6",
+  "model": "claude-opus-4.7",
   "prompt": "file://../prompts/sisyphus-system.md",
   "tools": [
     "subagent",
     "thinking",
-    "todo",
-    "use_subagent"
+    "todo"
   ],
   "allowedTools": [
     "subagent",
@@ -15,8 +14,7 @@
     "todo",
     "@sequential-thinking",
     "@memory",
-    "@context7",
-    "use_subagent"
+    "@context7"
   ],
   "resources": [
     "__OH_MY_KIRO_STEERING_GLOB__",

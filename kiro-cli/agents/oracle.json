@@ -1,7 +1,7 @@
 {
   "name": "oracle",
   "description": "Architecture, debugging, security, and final verification advisor. READ-ONLY.",
-  "model": "claude-opus-4.6",
+  "model": "claude-opus-4.7",
   "prompt": "file://../prompts/agents/oracle.md",
   "tools": [
     "read",
