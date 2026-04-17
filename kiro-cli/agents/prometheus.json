@@ -1,7 +1,7 @@
 {
   "name": "prometheus",
   "description": "Strategic planner with interview-style requirement gathering and concrete implementation plans.",
-  "model": "claude-opus-4.6",
+  "model": "claude-opus-4.7",
   "prompt": "file://../prompts/agents/prometheus.md",
   "tools": [
     "read",

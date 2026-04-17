@@ -105,7 +105,7 @@ prometheus는 추가로 `subagent`, `thinking` 보유 (metis/momus 호출용).
 
 | Claude | Kiro CLI |
 |--------|----------|
-| `opus` | `claude-opus-4.6` |
+| `opus` | `claude-opus-4.7` |
 | `sonnet` | `claude-sonnet-4.6` |
 | `haiku` | `claude-haiku-4.5` |
 

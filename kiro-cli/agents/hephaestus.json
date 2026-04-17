@@ -1,7 +1,7 @@
 {
   "name": "hephaestus",
   "description": "Autonomous deep worker \u2014 goal-based execution of complex, multi-step tasks without step-by-step guidance.",
-  "model": "claude-opus-4.6",
+  "model": "claude-opus-4.7",
   "prompt": "file://../prompts/agents/hephaestus.md",
   "tools": [
     "*"

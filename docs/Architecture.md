@@ -123,11 +123,11 @@
 
 | Agent | Model |
 |-------|-------|
-| sisyphus | claude-opus-4.6 |
-| oracle | claude-opus-4.6 |
-| prometheus | claude-opus-4.6 |
-| analyst | claude-opus-4.6 |
-| hephaestus | claude-opus-4.6 |
+| sisyphus | claude-opus-4.7 |
+| oracle | claude-opus-4.7 |
+| prometheus | claude-opus-4.7 |
+| analyst | claude-opus-4.7 |
+| hephaestus | claude-opus-4.7 |
 | metis | claude-sonnet-4.6 |
 | momus | claude-sonnet-4.6 |
 | atlas | claude-sonnet-4.6 |
