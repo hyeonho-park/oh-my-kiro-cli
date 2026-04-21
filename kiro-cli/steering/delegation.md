@@ -20,20 +20,20 @@
 
 ## Subagent Delegation
 
-오케스트레이터(sisyphus, atlas)는 `use_subagent` 도구로만 작업한다. 직접 도구 사용 불가.
+Orchestrators (sisyphus, atlas) work exclusively through the `use_subagent` tool. Direct tool use is not allowed.
 
-### 필수 절차 (위반 시 차단됨)
+### Required Procedure (violations are blocked)
 
-1. **ListAgents 먼저** — 세션 첫 서브에이전트 호출 전, 반드시 ListAgents로 사용 가능한 에이전트 목록 확인.
-2. **agent_name 명시** — ListAgents 결과에 있는 이름만 사용. 절대 생략하지 않는다.
-3. **kiro_default 금지** — 기본 에이전트로 폴백하면 차단된다.
+1. **ListAgents first** — before the first subagent call in a session, always run ListAgents to confirm the available agents.
+2. **Specify agent_name** — only use names returned by ListAgents. Never omit it.
+3. **No kiro_default** — falling back to the default agent is blocked.
 
-### 위임 패턴
+### Delegation Patterns
 
-- 파일 읽기/검색 → `explore` 서브에이전트 호출
-- 외부 문서 조사 → `librarian` 서브에이전트 호출
-- 구현 위임 → `executor` 또는 `hephaestus` 서브에이전트 호출
-- 독립 작업이 여러 개 → 여러 서브에이전트를 병렬 호출 (최대 4개)
+- File reading/search → call the `explore` subagent
+- External docs research → call the `librarian` subagent
+- Implementation → call the `executor` or `hephaestus` subagent
+- Multiple independent tasks → call multiple subagents in parallel (up to 4)
 
 ## Delegation Rules
 

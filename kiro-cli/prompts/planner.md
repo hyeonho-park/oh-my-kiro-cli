@@ -15,9 +15,9 @@ Activate the Prometheus planning workflow. Switch to `prometheus` agent to gathe
 5. Save the plan to `tmp/plans/{slug}.md`.
 6. Switch to `metis` for plan consultation.
 7. Switch to `momus` for risk review.
-8. Present plan with explicit choices: [승인] [수정 요청] [폐기]
+8. Present plan with explicit choices: [Approve] [Request Revision] [Discard]
 
-## On Rejection (수정 요청)
+## On Rejection (Request Revision)
 
 1. Collect user feedback.
 2. Pass the saved plan file path as seed to Prometheus.

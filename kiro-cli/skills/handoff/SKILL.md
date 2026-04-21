@@ -1,64 +1,64 @@
 ---
 name: handoff
-description: 세션 종료 시 사용자에게 전달 사항을 먼저 확인한 뒤, handoff.md를 갱신하고 다음 세션을 위한 핵심 컨텍스트를 요약합니다.
+description: Before ending a session, first ask the user for handoff notes, then update handoff.md and summarize the key context for the next session.
 user-invocable: true
 ---
 
 # Handoff Skill
 
-세션 종료 전 사용자 입력을 수집하고, 프로젝트 루트의 `handoff.md`를 갱신/읽어 현재 상태를 요약합니다.
+Before the session ends, collect handoff input from the user and update/read `handoff.md` at the project root to summarize current status.
 
-## 실행 순서
+## Execution Order
 
-### 1. 사용자에게 전달 사항 확인
+### 1. Ask the user for handoff notes
 
-사용자에게 다음과 같이 질문한다:
+Ask the user the following:
 
-> 세션을 종료하기 전에 다음 세션에 전달해야 할 내용이 있나요? (진행 중인 작업, 결정사항, 주의사항 등)
+> Before ending the session, is there anything that should be carried over to the next session? (work in progress, decisions, caveats, etc.)
 
-- 사용자가 내용을 제공하면 → 2단계로 진행
-- 사용자가 "없음" 또는 빈 응답이면 → 3단계로 건너뛴다
+- If the user provides content → proceed to step 2
+- If the user replies "none" or returns an empty response → skip to step 3
 
-### 2. handoff.md 갱신
+### 2. Update handoff.md
 
-프로젝트 루트의 `handoff.md`를 다음 규칙으로 갱신한다:
+Update `handoff.md` at the project root with these rules:
 
-- 파일이 없으면 새로 생성
-- 파일이 있으면 기존 내용을 유지하되, 사용자가 전달한 내용을 `## 세션 메모` 섹션에 추가/갱신
-- 현재 날짜와 브랜치 정보를 함께 기록
-- 기존 미완료 항목(`- [ ]`)은 절대 삭제하지 않는다
+- Create the file if it does not exist
+- If it exists, keep existing content and append/update the user-provided notes under the `## Session Notes` section
+- Record the current date and branch information together
+- Never delete existing unchecked items (`- [ ]`)
 
-### 3. handoff.md 읽기
+### 3. Read handoff.md
 
-1. 프로젝트 루트에서 `handoff.md` 파일을 Read 도구로 읽는다
-2. 없으면 `git log --oneline -20`으로 커밋 히스토리를 확인한다
+1. Read `handoff.md` at the project root using the Read tool
+2. If it is missing, check commit history with `git log --oneline -20`
 
-### 4. 요약 출력
+### 4. Summary output
 
-아래 형식으로 요약 출력한다:
+Produce the summary in the following format:
 
 ```
-## 프로젝트 현황
+## Project Status
 
-**브랜치**: {현재 브랜치}
-**마지막 작업**: {최근 커밋 요약}
+**Branch**: {current branch}
+**Last Work**: {summary of the most recent commit}
 
-## 핵심 구조
-{스킬/모듈 구조 요약 — 3~5줄}
+## Core Structure
+{summary of skill/module structure — 3 to 5 lines}
 
-## 주요 패턴 / 주의사항
-{알아야 할 핵심 컨벤션 — 불릿 3~5개}
+## Key Patterns / Caveats
+{key conventions to know — 3 to 5 bullets}
 
-## 미완료 항목
-{handoff.md의 미완료 체크리스트}
+## Open Items
+{unchecked items from handoff.md}
 
-## 세션 메모
-{사용자가 전달한 내용 요약 — 있을 경우만}
+## Session Notes
+{summary of what the user provided — only if present}
 ```
 
-## 규칙
+## Rules
 
-- handoff.md 내용을 그대로 출력하지 말고 핵심만 추려서 요약
-- 미완료 항목은 빠짐없이 포함
-- 코드 블록, 긴 JSON, IAM Policy 등 상세 내용은 생략하고 "handoff.md 참조" 안내
-- 사용자 응답을 기다리지 않고 건너뛰지 않는다 — 반드시 질문 후 응답을 받는다
+- Do not dump the contents of handoff.md verbatim; summarize the essentials
+- Include every open item without omission
+- Skip detailed content such as code blocks, long JSON, or IAM policies, and direct the reader to "see handoff.md"
+- Do not skip step 1 — always ask the question and wait for a response

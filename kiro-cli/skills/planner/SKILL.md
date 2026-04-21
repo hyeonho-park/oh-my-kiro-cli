@@ -67,12 +67,12 @@ Switch to `momus` for risk assessment and go/no-go recommendation.
 Present the reviewed plan with explicit choices:
 
 ```
-[✅ 승인] — @start-work로 실행
-[✏️ 수정 요청] — 피드백과 함께 Prometheus가 기존 계획을 seed로 재수정
-[🗑️ 폐기] — 계획 폐기, 처음부터 다시
+[✅ Approve] — execute via @start-work
+[✏️ Request Revision] — Prometheus revises the existing plan as a seed using the feedback
+[🗑️ Discard] — discard the plan and start over
 ```
 
-On **수정 요청**:
+On **Request Revision**:
 1. Pass the saved plan file as seed to Prometheus
 2. Prometheus reads the seed, applies user feedback, saves updated plan
 3. Re-run Metis → Momus → User Approval (rejection loop)

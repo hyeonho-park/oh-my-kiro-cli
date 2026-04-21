@@ -2,10 +2,10 @@
 
 ## Orchestrator Rules (sisyphus, atlas)
 
-- 직접 파일을 읽거나 쓰거나 검색하지 않는다 — 모든 작업은 서브에이전트를 통해서만 수행한다.
-- use_subagent 호출 전 반드시 ListAgents를 먼저 실행한다.
-- agent_name을 절대 생략하지 않는다.
-- kiro_default를 agent_name으로 사용하지 않는다.
+- Do not read, write, or search files directly — all work is performed through subagents.
+- Always run ListAgents before calling use_subagent.
+- Never omit agent_name.
+- Never use kiro_default as agent_name.
 
 ## Execution Agent Rules (executor, hephaestus, designer, etc.)
 
@@ -49,16 +49,16 @@
 
 ## File Deletion
 
-- `rm`은 사용하지 않는다 (shell에서 차단됨).
-- macOS에서는 `trash` 명령을 사용한다.
-- `trash`가 없으면 `mv <file> ~/.Trash/`를 사용한다.
-- 삭제 실패 시 대안을 시도한 후에만 사용자에게 보고한다. 바로 포기하지 않는다.
+- Do not use `rm` (blocked in shell).
+- On macOS, use the `trash` command.
+- If `trash` is not available, use `mv <file> ~/.Trash/`.
+- If deletion fails, try alternatives before reporting to the user. Do not give up immediately.
 
 ## Failure Recovery
 
-- 도구 호출이 실패하면 대안을 시도한다. 바로 사용자에게 떠넘기지 않는다.
-- 시스템 컨텍스트(OS, 환경)를 확인하고 해당 환경에 맞는 대안을 사용한다.
-- 3회 대안 시도 후에도 실패하면 그때 사용자에게 보고한다.
+- If a tool call fails, try an alternative. Do not punt to the user right away.
+- Check the system context (OS, environment) and use an alternative that fits that environment.
+- Only report to the user after three alternative attempts have failed.
 
 ## Safety
 
