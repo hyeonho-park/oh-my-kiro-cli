@@ -22,7 +22,7 @@
 │   ├── Architecture.md
 │   └── Migration.md
 ├── custom_settings/
-│   └── kiro-builtin-tools.md    # Kiro CLI 빌트인 도구 레퍼런스
+│   └── kiro-builtin-tools.md    # Kiro CLI builtin tool reference
 └── kiro-cli/
     ├── agents/       # 17 agent JSON templates
     ├── steering/     # 9 steering files
@@ -34,23 +34,23 @@
 
 ## Installed Runtime Layout
 
-`~/.kiro/`는 Kiro IDE와 CLI가 공유하며, 다른 에이전트 설정이 이미 존재할 수 있다. oh-my-kiro-cli는 자기가 관리하는 파일만 설치하고 기존 파일은 건드리지 않는다.
+`~/.kiro/` is shared between Kiro IDE and CLI, and other agent configurations may already exist there. oh-my-kiro-cli only installs the files it manages and does not touch existing files.
 
 ```text
 ~/.kiro/
-├── agents/                          # oh-my-kiro-cli 17개 + 기존 파일 보존
+├── agents/                          # 17 oh-my-kiro-cli files + existing files preserved
 │   ├── sisyphus.json
 │   ├── oracle.json
 │   └── ...
-├── steering/                        # oh-my-kiro-cli가 생성 (9개)
+├── steering/                        # created by oh-my-kiro-cli (9 files)
 │   ├── AGENTS.md
 │   ├── workflow.md
 │   └── ...
-├── skills/                          # oh-my-kiro-cli 12개 + 기존 파일 보존
+├── skills/                          # 12 oh-my-kiro-cli files + existing files preserved
 │   ├── orchestrate/SKILL.md
 │   ├── ultrawork/SKILL.md
 │   └── ...
-├── prompts/                         # oh-my-kiro-cli가 생성 (25개)
+├── prompts/                         # created by oh-my-kiro-cli (25 files)
 │   ├── sisyphus-system.md
 │   ├── planner.md
 │   ├── ...
@@ -59,37 +59,37 @@
 │       ├── analyst.md
 │       └── ...
 ├── hooks/
-│   └── oh-my-kiro-cli/              # oh-my-kiro-cli 전용 네임스페이스
+│   └── oh-my-kiro-cli/              # dedicated oh-my-kiro-cli namespace
 │       ├── pre-tool-use/
 │       ├── post-tool-use/
 │       └── stop/
 ├── settings/
-│   ├── cli.json                     # deep merge (기존 키 보존)
-│   └── mcp.json                     # 파일 없을 때만 생성
-└── backups/                         # 설치 시 백업
+│   ├── cli.json                     # deep merge (existing keys preserved)
+│   └── mcp.json                     # created only when the file does not exist
+└── backups/                         # backups taken at install time
 ```
 
-### 충돌 방지 원칙
+### Conflict-Avoidance Principles
 
-- `agents/`, `skills/`: oh-my-kiro-cli가 관리하는 이름만 덮어쓰고 나머지는 보존
-- `settings/cli.json`: deep merge로 기존 설정 보존
-- `settings/mcp.json`: 파일이 이미 있으면 설치하지 않음
-- uninstall은 oh-my-kiro-cli가 직접 설치한 `settings/mcp.json`만 제거하고, 기존 사용자 파일은 보존
-- `hooks/oh-my-kiro-cli/`: 전용 네임스페이스 사용, 다른 hooks 디렉토리와 충돌 없음
+- `agents/`, `skills/`: only the names managed by oh-my-kiro-cli are overwritten; the rest are preserved
+- `settings/cli.json`: existing settings preserved via deep merge
+- `settings/mcp.json`: not installed if the file already exists
+- uninstall only removes `settings/mcp.json` when oh-my-kiro-cli installed it directly; existing user files are preserved
+- `hooks/oh-my-kiro-cli/`: uses a dedicated namespace, so there is no conflict with other hooks directories
 
 ### Path Conventions
 
-에이전트 JSON은 `~/.kiro/agents/`에 설치된다. 상대 경로는 이 위치 기준으로 해석된다:
+Agent JSON files are installed to `~/.kiro/agents/`. Relative paths are resolved from this location:
 
 | Path Pattern | Resolves To | Used For |
 |-------------|-------------|----------|
 | `file://../prompts/X.md` | `~/.kiro/prompts/X.md` | agent `prompt` field |
 | `file://../prompts/agents/X.md` | `~/.kiro/prompts/agents/X.md` | agent prompt assets |
-| `skill://../skills/**/SKILL.md` | `~/.kiro/skills/**/SKILL.md` | 글로벌 스킬 자동 발견 |
-| `file://.kiro/steering/**/*.md` | `<workspace>/.kiro/steering/*.md` | 워크스페이스 steering |
-| `skill://.kiro/skills/**/SKILL.md` | `<workspace>/.kiro/skills/*.md` | 워크스페이스 스킬 |
+| `skill://../skills/**/SKILL.md` | `~/.kiro/skills/**/SKILL.md` | global skill auto-discovery |
+| `file://.kiro/steering/**/*.md` | `<workspace>/.kiro/steering/*.md` | workspace steering |
+| `skill://.kiro/skills/**/SKILL.md` | `<workspace>/.kiro/skills/*.md` | workspace skills |
 
-`__OH_MY_KIRO_STEERING_GLOB__`은 install.sh가 절대 경로로 치환한다.
+`__OH_MY_KIRO_STEERING_GLOB__` is replaced with an absolute path by install.sh.
 
 ## Agent Architecture
 
@@ -109,15 +109,15 @@
 - READ-ONLY shell policy remains hook-first; broad `denyByDefault` rollout is still not the live baseline
 - `librarian` is the only built-in external research pilot; `code` and `knowledge` are not broadly enabled
 
-### 에이전트 분류
+### Agent Categories
 
-| 분류 | 도구 | 에이전트 |
+| Category | Tools | Agents |
 |------|------|----------|
-| **오케스트레이터** | `subagent`, `thinking`, `todo` | sisyphus, atlas |
-| **실행자** | `["*"]` + `allowedTools`에 write 포함 | executor, hephaestus, designer, qa-tester, build-error-resolver, writer |
+| **Orchestrator** | `subagent`, `thinking`, `todo` | sisyphus, atlas |
+| **Executor** | `["*"]` with `write` in `allowedTools` | executor, hephaestus, designer, qa-tester, build-error-resolver, writer |
 | **READ-ONLY** | `read`, `glob`, `grep`, `shell` (+ `web_search`, `web_fetch` for `librarian`) | oracle, analyst, code-reviewer, explore, librarian, metis, momus, multimodal-looker, prometheus |
 
-오케스트레이터는 직접 파일을 읽거나 쓸 수 없다. `use_subagent`로만 작업한다.
+Orchestrators cannot read or write files directly. They only work through `use_subagent`.
 
 ### Model Allocation
 
@@ -143,7 +143,7 @@
 
 ### toolsSettings
 
-실행 에이전트에 적용되는 공통 설정:
+Common settings applied to execution agents:
 
 ```json
 {
@@ -158,7 +158,7 @@
 }
 ```
 
-오케스트레이터(sisyphus, atlas)에 적용되는 설정:
+Settings applied to orchestrators (sisyphus, atlas):
 
 ```json
 {
@@ -173,16 +173,16 @@
 
 ### Hook Assignment
 
-총 12개 훅 스크립트를 에이전트 분류에 따라 할당한다.
+A total of 12 hook scripts are assigned per agent category.
 
-#### 오케스트레이터
+#### Orchestrators
 
 | Agent | preToolUse | postToolUse | stop |
 |-------|-----------|-------------|------|
-| sisyphus | _(없음)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
-| atlas | _(없음)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
+| sisyphus | _(none)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
+| atlas | _(none)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
 
-#### 실행자
+#### Executors
 
 | Agent | preToolUse | postToolUse | stop |
 |-------|-----------|-------------|------|
@@ -197,15 +197,15 @@
 
 | Agent | preToolUse | postToolUse | stop |
 |-------|-----------|-------------|------|
-| oracle | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| analyst | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| code-reviewer | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| explore | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| librarian | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| metis | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| momus | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| multimodal-looker | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| prometheus | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read), empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | _(없음)_ |
+| oracle | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| analyst | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| code-reviewer | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| explore | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| librarian | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| metis | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| momus | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| multimodal-looker | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| prometheus | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read), empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | _(none)_ |
 
 ## Installer Architecture
 
@@ -218,17 +218,17 @@
 Agent `prompt` and `resources` fields use relative paths that resolve from `~/.kiro/agents/` at runtime. These do NOT need rendering.
 
 ### Install Behavior
-- Agent JSON: 플레이스홀더만 절대 경로로 렌더링, 상대 경로는 그대로
-- Steering, prompts, skills: 그대로 복사
-- CLI settings: deep merge (기존 키 보존)
-- MCP settings: 파일 없을 때만 설치
-- Hooks: 복사 후 실행 권한 부여 (현재 12개)
-- Backup: 충돌 파일은 타임스탬프 백업 후 덮어쓰기
-- 관리 대상이 아닌 파일은 절대 건드리지 않음
-- `alias omk="kiro-cli --agent sisyphus"`를 zshrc/bashrc에 자동 추가
-- alias는 현재 install-only 정책이며 uninstall 시 자동으로 제거하지 않음
+- Agent JSON: only placeholders are rendered to absolute paths; relative paths are left as-is
+- Steering, prompts, skills: copied as-is
+- CLI settings: deep merge (existing keys preserved)
+- MCP settings: installed only when the file does not exist
+- Hooks: copied, then made executable (currently 12 files)
+- Backup: conflicting files are backed up with a timestamp before being overwritten
+- Files not under management are never touched
+- `alias omk="kiro-cli --agent sisyphus"` is automatically added to zshrc/bashrc
+- The alias follows the current install-only policy and is not automatically removed on uninstall
 
 ### Validation helpers
 
-- `scripts/validate.sh`: externalized prompt refs, hook existence, READ-ONLY/실행자 hook-matrix integrity, prompt inventory symmetry, orchestrator/실행자/READ-ONLY 도구 경계, `librarian` specialist-tool exclusivity, `mcp_managed` ownership metadata 검사
-- `tests/smoke-install.sh`: temp `KIRO_HOME` install/uninstall smoke test, hook behavior 확인, externalized prompt cleanup 확인, installer-managed `settings/mcp.json` 제거 확인, 기존 `settings/mcp.json` install/uninstall 보존 확인, alias install-only 정책 확인
+- `scripts/validate.sh`: checks externalized prompt refs, hook existence, READ-ONLY/executor hook-matrix integrity, prompt inventory symmetry, orchestrator/executor/READ-ONLY tool boundaries, `librarian` specialist-tool exclusivity, and `mcp_managed` ownership metadata
+- `tests/smoke-install.sh`: runs install/uninstall smoke tests with a temp `KIRO_HOME`, verifies hook behavior, confirms externalized prompt cleanup, confirms removal of installer-managed `settings/mcp.json`, confirms install/uninstall preservation of an existing `settings/mcp.json`, and verifies the alias install-only policy

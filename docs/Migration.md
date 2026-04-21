@@ -1,28 +1,28 @@
 # Migration Guide
 
-oh-my-openagent (또는 oh-my-settings Claude Code 버전) 업데이트 사항을 oh-my-kiro-cli에 반영하기 위한 가이드.
+Guide for applying updates from oh-my-openagent (or the Claude Code version of oh-my-settings) into oh-my-kiro-cli.
 
-이 문서는 LLM 에이전트가 마이그레이션 작업을 자동으로 수행할 수 있도록 작성되었다.
+This document is written so that an LLM agent can perform the migration work automatically.
 
 ---
 
-## 소스와 타겟
+## Source and Target
 
-| 항목 | 경로 |
+| Item | Path |
 |------|------|
-| **소스 (Claude Code)** | `~/workspace/claude-code-settings/oh-my-settings/claude-<version>/` |
-| **타겟 (Kiro CLI)** | `~/workspace/oh-my-kiro-cli/kiro-cli/` |
-| **소스 GitHub** | https://github.com/code-yeongyu/oh-my-openagent |
+| **Source (Claude Code)** | `~/workspace/claude-code-settings/oh-my-settings/claude-<version>/` |
+| **Target (Kiro CLI)** | `~/workspace/oh-my-kiro-cli/kiro-cli/` |
+| **Source GitHub** | https://github.com/code-yeongyu/oh-my-openagent |
 
 ---
 
-## 에이전트 아키텍처 (Kiro 고유)
+## Agent Architecture (Kiro-specific)
 
-Kiro CLI에서는 에이전트를 3가지 분류로 나눈다. Claude Code에는 이 구분이 없다.
+Kiro CLI divides agents into 3 categories. Claude Code does not have this distinction.
 
-### 오케스트레이터 (sisyphus, atlas)
+### Orchestrators (sisyphus, atlas)
 
-직접 도구가 없다. `use_subagent`로만 작업한다.
+They have no direct tools. They only work through `use_subagent`.
 
 ```json
 {
@@ -37,13 +37,13 @@ Kiro CLI에서는 에이전트를 3가지 분류로 나눈다. Claude Code에는
 }
 ```
 
-- `availableAgents`: 서브에이전트로 스폰 가능한 목록. `kiro_default` 제외.
-- `trustedAgents`: 확인 없이 바로 스폰. 보통 availableAgents 전체.
-- `read`, `write`, `shell`, `glob`, `grep` 없음 — 직접 작업 불가.
+- `availableAgents`: list of subagents that can be spawned. `kiro_default` excluded.
+- `trustedAgents`: spawned immediately without confirmation. Typically the full availableAgents list.
+- No `read`, `write`, `shell`, `glob`, `grep` — direct work is not possible.
 
-### 실행자 (executor, hephaestus, designer, qa-tester, build-error-resolver, writer)
+### Executors (executor, hephaestus, designer, qa-tester, build-error-resolver, writer)
 
-실행자 계열은 `write` 가능한 작업 에이전트다. 공통적으로 `read`, `glob`, `grep`, `shell`, `write`를 사용하며, 역할에 따라 추가 허용 도구가 달라질 수 있다. 작업 디렉토리 쓰기 허용, `rm` 차단이 기본이다.
+The executor tier consists of agents capable of `write`. They commonly use `read`, `glob`, `grep`, `shell`, and `write`, and additional allowed tools may differ by role. Working-directory write is allowed and `rm` is blocked by default.
 
 ```json
 {
@@ -62,7 +62,7 @@ Kiro CLI에서는 에이전트를 3가지 분류로 나눈다. Claude Code에는
 
 ### READ-ONLY (oracle, analyst, code-reviewer, explore, librarian, metis, momus, multimodal-looker, prometheus)
 
-기본적으로 읽기 도구만 사용하고 쓰기 불가다. 단, 현재 구현에서는 `librarian`만 specialist pilot으로 `web_search`, `web_fetch`를 추가로 사용한다.
+By default they only use read tools and cannot write. Currently, only `librarian` additionally uses `web_search` and `web_fetch` as a specialist pilot.
 
 ```json
 {
@@ -71,24 +71,24 @@ Kiro CLI에서는 에이전트를 3가지 분류로 나눈다. Claude Code에는
 }
 ```
 
-prometheus는 추가로 `subagent`, `thinking` 보유 (metis/momus 호출용).
+prometheus additionally has `subagent` and `thinking` (used to call metis/momus).
 
 ---
 
-## 컴포넌트 매핑 테이블
+## Component Mapping Table
 
 ### Agents: `agents/*.md` → `agents/*.json`
 
-| Claude Source | Kiro Target | 분류 |
+| Claude Source | Kiro Target | Category |
 |---------------|-------------|------|
-| _(CLAUDE.md에서 추출)_ | `agents/sisyphus.json` | 오케스트레이터 |
-| `agents/atlas.md` | `agents/atlas.json` | 오케스트레이터 |
-| `agents/executor.md` | `agents/executor.json` | 실행자 |
-| `agents/hephaestus.md` | `agents/hephaestus.json` | 실행자 |
-| `agents/designer.md` | `agents/designer.json` | 실행자 |
-| `agents/qa-tester.md` | `agents/qa-tester.json` | 실행자 |
-| `agents/build-error-resolver.md` | `agents/build-error-resolver.json` | 실행자 |
-| `agents/writer.md` | `agents/writer.json` | 실행자 |
+| _(extracted from CLAUDE.md)_ | `agents/sisyphus.json` | Orchestrator |
+| `agents/atlas.md` | `agents/atlas.json` | Orchestrator |
+| `agents/executor.md` | `agents/executor.json` | Executor |
+| `agents/hephaestus.md` | `agents/hephaestus.json` | Executor |
+| `agents/designer.md` | `agents/designer.json` | Executor |
+| `agents/qa-tester.md` | `agents/qa-tester.json` | Executor |
+| `agents/build-error-resolver.md` | `agents/build-error-resolver.json` | Executor |
+| `agents/writer.md` | `agents/writer.json` | Executor |
 | `agents/oracle.md` | `agents/oracle.json` | READ-ONLY |
 | `agents/prometheus.md` | `agents/prometheus.json` | READ-ONLY (+subagent) |
 | `agents/metis.md` | `agents/metis.json` | READ-ONLY |
@@ -99,9 +99,9 @@ prometheus는 추가로 `subagent`, `thinking` 보유 (metis/momus 호출용).
 | `agents/multimodal-looker.md` | `agents/multimodal-looker.json` | READ-ONLY |
 | `agents/explore.md` | `agents/explore.json` | READ-ONLY |
 
-### 변환 규칙: Agent MD → Agent JSON
+### Conversion Rules: Agent MD → Agent JSON
 
-**모델명 매핑:**
+**Model name mapping:**
 
 | Claude | Kiro CLI |
 |--------|----------|
@@ -109,7 +109,7 @@ prometheus는 추가로 `subagent`, `thinking` 보유 (metis/momus 호출용).
 | `sonnet` | `claude-sonnet-4.6` |
 | `haiku` | `claude-haiku-4.5` |
 
-**도구명 매핑:**
+**Tool name mapping:**
 
 | Claude Tool | Kiro Tool | Notes |
 |-------------|-----------|-------|
@@ -118,62 +118,62 @@ prometheus는 추가로 `subagent`, `thinking` 보유 (metis/momus 호출용).
 | `Glob` | `glob` | |
 | `Edit`/`Write` | `write` | |
 | `Bash` | `shell` | |
-| `TodoWrite` | `todo` | Kiro 빌트인 |
-| `WebSearch`/`WebFetch` | `web_search` / `web_fetch` | 현재 구현에서는 `librarian` pilot에만 사용 |
-| `Task` (subagent) | `subagent` | `use_subagent` 도구 |
+| `TodoWrite` | `todo` | Kiro builtin |
+| `WebSearch`/`WebFetch` | `web_search` / `web_fetch` | Currently used only by the `librarian` pilot |
+| `Task` (subagent) | `subagent` | `use_subagent` tool |
 
-**분류별 변환:**
+**Per-category conversion:**
 
-오케스트레이터로 변환할 때:
-1. `tools`/`allowedTools`를 `["subagent", "thinking", "todo"]`로 설정
-2. `toolsSettings.subagent`에 `availableAgents`/`trustedAgents` 설정
-3. `read`, `write`, `shell` 등 직접 도구 제거
+When converting to an orchestrator:
+1. Set `tools`/`allowedTools` to `["subagent", "thinking", "todo"]`
+2. Set `availableAgents`/`trustedAgents` under `toolsSettings.subagent`
+3. Remove direct tools such as `read`, `write`, `shell`
 
-실행자로 변환할 때:
-1. `tools`를 `["*"]`로 설정
-2. `allowedTools`에 `read`, `glob`, `grep`, `shell`, `write` 포함
+When converting to an executor:
+1. Set `tools` to `["*"]`
+2. Include `read`, `glob`, `grep`, `shell`, `write` in `allowedTools`
 3. `toolsSettings.write.allowedPaths = ["./**"]`
 4. `toolsSettings.shell`: `autoAllowReadonly=true`, `deniedCommands=["rm .*"]`, `allowedCommands=["trash .*"]`
 
-READ-ONLY로 변환할 때:
-1. `tools`/`allowedTools`를 `["read", "glob", "grep", "shell"]`로 동일하게 설정
-2. `write` 도구 제외
+When converting to READ-ONLY:
+1. Set `tools`/`allowedTools` identically to `["read", "glob", "grep", "shell"]`
+2. Exclude the `write` tool
 
-**공통 필드:**
+**Common fields:**
 
-| 필드 | 값 | Notes |
+| Field | Value | Notes |
 |------|-----|-------|
-| `resources` | `["__OH_MY_KIRO_STEERING_GLOB__", "file://.kiro/steering/**/*.md"]` | 글로벌+워크스페이스 steering |
-| `includeMcpJson` | `true` (explore만 `false`) | |
+| `resources` | `["__OH_MY_KIRO_STEERING_GLOB__", "file://.kiro/steering/**/*.md"]` | global + workspace steering |
+| `includeMcpJson` | `true` (only `explore` uses `false`) | |
 
 ### Hook Assignment
 
-총 12개 훅 스크립트. 매처(matcher)가 있는 훅은 해당 도구 호출 후에만 발동한다.
+A total of 12 hook scripts. Hooks with a matcher only fire after the corresponding tool call.
 
-| 에이전트 분류 | preToolUse (fs_write) | postToolUse | stop |
+| Agent Category | preToolUse (fs_write) | postToolUse | stop |
 |-------------|-----------|-------------|------|
-| 오케스트레이터 (sisyphus, atlas) | _(없음)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
-| 실행자 (executor, hephaestus, build-error-resolver) | comment-checker, doc-blocker, test-location-validator, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
-| 실행자 (designer, writer) | comment-checker, doc-blocker, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
-| 실행자 (qa-tester) | comment-checker, test-location-validator, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
-| READ-ONLY (8개) | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(없음)_ |
-| prometheus (READ-ONLY + subagent) | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read), empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | _(없음)_ |
+| Orchestrators (sisyphus, atlas) | _(none)_ | context-window-reminder, empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | todo-continuation |
+| Executors (executor, hephaestus, build-error-resolver) | comment-checker, doc-blocker, test-location-validator, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| Executors (designer, writer) | comment-checker, doc-blocker, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| Executors (qa-tester) | comment-checker, test-location-validator, secret-leak-detector | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | todo-continuation, cleanup-prompt |
+| READ-ONLY (8 agents) | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read) | _(none)_ |
+| prometheus (READ-ONLY + subagent) | destructive-command-blocker (shell) | context-window-reminder, agent-usage-reminder (glob/grep), read-image-resizer (read), empty-subagent-response-detector (use_subagent), delegate-retry-guidance (use_subagent) | _(none)_ |
 
 ---
 
 ### Skills: `skills/*/SKILL.md` → `skills/*/SKILL.md`
 
-형식 거의 동일. 변환:
+Almost identical format. Conversion:
 
-1. `user-invocable` 필드 제거
-2. `description`에 트리거 키워드 추가 ("Use when the user says ...")
-3. 본문에서 `Task(agent=...)` → `use_subagent`로 서브에이전트 호출
-4. `SubAgent` 참조 → `use_subagent` 도구 호출
-5. Claude 도구명 → Kiro 도구명
+1. Remove the `user-invocable` field
+2. Add trigger keywords to `description` ("Use when the user says ...")
+3. In the body, replace `Task(agent=...)` with a `use_subagent` subagent call
+4. Replace `SubAgent` references with `use_subagent` tool calls
+5. Claude tool names → Kiro tool names
 
 ### Commands: `commands/*.md` → `prompts/*.md`
 
-| Claude Source | Kiro Target | 호출 방법 |
+| Claude Source | Kiro Target | Invocation |
 |---------------|-------------|-----------|
 | `commands/ralph-loop.md` | `prompts/ralph-loop.md` | `@ralph-loop` |
 | `commands/ulw-loop.md` | `prompts/ulw-loop.md` | `@ulw-loop` |
@@ -182,40 +182,40 @@ READ-ONLY로 변환할 때:
 | `commands/handoff.md` | `prompts/handoff.md` | `@handoff` |
 | `commands/code-review.md` | `prompts/code-review.md` | `@code-review` |
 | `commands/build-fix.md` | `prompts/build-fix.md` | `@build-fix` |
-| `commands/checkpoint.md` | _(미포팅)_ | Kiro 빌트인 `/checkpoint` |
+| `commands/checkpoint.md` | _(not ported)_ | Kiro builtin `/checkpoint` |
 
-변환: YAML frontmatter 제거, `/command` → `@prompt-name`, `Task(agent=...)` → `use_subagent` 호출.
+Conversion: remove YAML frontmatter, replace `/command` with `@prompt-name`, and replace `Task(agent=...)` with a `use_subagent` call.
 
 ### Current rollout status
 
-- `sisyphus`는 기존처럼 `prompts/sisyphus-system.md`를 사용한다.
-- `sisyphus`를 제외한 나머지 16개 에이전트는 모두 `prompts/agents/*.md`로 외부화되었다.
-- `prometheus`는 여전히 `use_subagent` 후처리 훅 특수 케이스지만 prompt는 외부 파일을 사용한다.
-- secret detection은 실행자 계열 `fs_write` pre-hook으로 추가되었다.
-- `librarian`는 specialist pilot으로 `web_search`, `web_fetch`를 사용한다.
-- `settings/mcp.json`는 기존 파일이면 install/uninstall 모두 보존하고, oh-my-kiro-cli가 직접 설치한 경우에만 uninstall에서 제거한다.
-- `alias omk`는 install-only 정책이며 uninstall에서 자동 제거하지 않는다.
+- `sisyphus` continues to use `prompts/sisyphus-system.md` as before.
+- All 16 agents other than `sisyphus` have been externalized to `prompts/agents/*.md`.
+- `prometheus` is still a special case for `use_subagent` post-hooks, but its prompt is sourced from an external file.
+- secret detection was added as an executor-tier `fs_write` pre-hook.
+- `librarian` uses `web_search` and `web_fetch` as a specialist pilot.
+- `settings/mcp.json` is preserved on both install and uninstall when the file pre-exists, and is only removed on uninstall when oh-my-kiro-cli installed it directly.
+- The `alias omk` follows the install-only policy and is not automatically removed on uninstall.
 
 ### Hooks: `hooks/**/*.sh` → `hooks/**/*.sh`
 
-총 12개 훅 스크립트:
+A total of 12 hook scripts:
 
-| 훅 | 라이프사이클 | 매처 | 출처 |
+| Hook | Lifecycle | Matcher | Origin |
 |---|---|---|---|
 | comment-checker | preToolUse | fs_write | Claude Code hooks |
 | doc-blocker | preToolUse | fs_write | Claude Code hooks |
 | test-location-validator | preToolUse | fs_write | Claude Code hooks |
 | destructive-command-blocker | preToolUse | shell | oh-my-kiro-cli Phase 1 |
 | secret-leak-detector | preToolUse | fs_write | oh-my-kiro-cli Phase 1 |
-| context-window-reminder | postToolUse | _(전체)_ | Claude Code hooks |
+| context-window-reminder | postToolUse | _(all)_ | Claude Code hooks |
 | agent-usage-reminder | postToolUse | glob/grep | Claude Code hooks |
 | read-image-resizer | postToolUse | read | Claude Code hooks |
 | empty-subagent-response-detector | postToolUse | use_subagent | oh-my-openagent empty-task-response-detector |
 | delegate-retry-guidance | postToolUse | use_subagent | oh-my-openagent delegate-task-retry |
-| todo-continuation | stop | _(전체)_ | Claude Code hooks |
-| cleanup-prompt | stop | _(전체)_ | Claude Code hooks |
+| todo-continuation | stop | _(all)_ | Claude Code hooks |
+| cleanup-prompt | stop | _(all)_ | Claude Code hooks |
 
-훅은 Kiro stdin JSON 형식으로 변환. Claude는 환경변수/인자, Kiro는 JSON stdin.
+Hooks are converted to the Kiro stdin JSON format. Claude uses env vars/arguments; Kiro uses JSON over stdin.
 
 ```bash
 #!/usr/bin/env bash
@@ -225,74 +225,74 @@ PAYLOAD="$payload" python3 - <<'PY'
 import json, os, sys
 payload = json.loads(os.environ["PAYLOAD"])
 tool_input = payload.get("tool_input", {}) or {}
-# ... 로직 ...
+# ... logic ...
 PY
 ```
 
-Exit code: `0`=허용, `2`=차단(preToolUse만), 기타=경고.
+Exit codes: `0`=allow, `2`=block (preToolUse only), others=warning.
 
 ### Rules: `rules/*.md` → `steering/*.md`
 
-YAML frontmatter 제거, plain markdown으로.
+Strip YAML frontmatter, convert to plain markdown.
 
-### CLAUDE.md → 분할
+### CLAUDE.md → Split
 
-| CLAUDE.md 섹션 | Kiro Target |
+| CLAUDE.md Section | Kiro Target |
 |---------------|-------------|
 | Identity, Core Competencies | `prompts/sisyphus-system.md` |
 | Phase-Based Workflow, Operating Modes, Magic Keywords, Todo Management | `steering/workflow.md` |
 | Available Agents, Category-Based Delegation | `steering/AGENTS.md` |
 | Delegation Rules, Oracle Protocol | `steering/delegation.md` |
 | Code Changes, Constraints, File Rules, Communication Style | `steering/constraints.md` |
-| Hooks | _(제거 — 에이전트 JSON에 직접 설정)_ |
+| Hooks | _(removed — configured directly in agent JSON)_ |
 
-### settings.json → 분산
+### settings.json → Distributed
 
-| 필드 | Kiro Target |
+| Field | Kiro Target |
 |------|-------------|
 | `model` | `settings/cli.json` → `chat.defaultModel` |
-| `permissions.allow` | 각 agent JSON의 `allowedTools` + `toolsSettings` |
-| `hooks` | 각 agent JSON의 `hooks` 필드 |
+| `permissions.allow` | each agent JSON's `allowedTools` + `toolsSettings` |
+| `hooks` | each agent JSON's `hooks` field |
 | `mcpServers` | `settings/mcp.json` |
 
 ### Lifecycle change checklist
 
-- `install.sh`와 `uninstall.sh`를 함께 수정했는가?
-- `scripts/validate.sh`에 필요한 정적 확인을 추가했는가?
-- `tests/smoke-install.sh`에 install/uninstall 시나리오를 추가했는가?
-- `README.md`, `docs/Architecture.md`, `docs/Migration.md`가 실제 동작과 일치하는가?
-- 기존 사용자 파일과 shell rc 수정이 보존/비복원/복원 중 어느 정책인지 명시했는가?
+- Did you update `install.sh` and `uninstall.sh` together?
+- Did you add the necessary static checks to `scripts/validate.sh`?
+- Did you add install/uninstall scenarios to `tests/smoke-install.sh`?
+- Do `README.md`, `docs/Architecture.md`, and `docs/Migration.md` match the actual behavior?
+- Did you explicitly state the policy (preserve, no-restore, or restore) for existing user files and shell rc modifications?
 
 ---
 
-## 업데이트 반영 절차
+## Update Integration Procedure
 
-### Step 1: 변경 사항 파악
+### Step 1: Identify changes
 
 ```bash
 diff -rq claude-<old-version>/ claude-<new-version>/ | grep -v '.DS_Store'
 ```
 
-### Step 2: 카테고리별 변환
+### Step 2: Category-based conversion
 
-#### 새 에이전트 추가
+#### Adding a new agent
 
-1. 분류 결정 (오케스트레이터 / 실행자 / READ-ONLY)
-2. 분류별 변환 규칙에 따라 JSON 생성
-3. `install.sh`의 `AGENTS` 배열에 추가
-4. `uninstall.sh`도 동일
-5. 오케스트레이터의 `availableAgents`/`trustedAgents`에 추가
+1. Decide the category (Orchestrator / Executor / READ-ONLY)
+2. Generate JSON according to the category's conversion rules
+3. Add to the `AGENTS` array in `install.sh`
+4. Do the same for `uninstall.sh`
+5. Add to the orchestrators' `availableAgents`/`trustedAgents`
 
-#### 새 스킬/커맨드/훅 추가
+#### Adding a new skill/command/hook
 
-1. 위 변환 규칙에 따라 변환
-2. `install.sh`의 해당 배열에 추가
+1. Convert using the rules above
+2. Add to the corresponding array in `install.sh`
 
-#### CLAUDE.md 변경
+#### CLAUDE.md changes
 
-분할 매핑 테이블에 따라 해당 steering/prompt 파일에 반영.
+Apply to the relevant steering/prompt file according to the split mapping table.
 
-### Step 3: install.sh 배열 업데이트
+### Step 3: Update install.sh arrays
 
 ```bash
 AGENTS=(sisyphus oracle prometheus ...)
@@ -301,75 +301,75 @@ PROMPT_FILES=(sisyphus-system.md planner.md ...)
 SKILLS=(orchestrate ultrawork ralph ...)
 ```
 
-현재 구현 기준으로 `PROMPT_FILES`에는 `agents/oracle.md`, `agents/analyst.md`, `agents/code-reviewer.md`, `agents/explore.md`, `agents/librarian.md`, `agents/metis.md`, `agents/momus.md`, `agents/multimodal-looker.md`, `agents/atlas.md`, `agents/build-error-resolver.md`, `agents/designer.md`, `agents/executor.md`, `agents/hephaestus.md`, `agents/prometheus.md`, `agents/qa-tester.md`, `agents/writer.md`가 포함된다.
+In the current implementation, `PROMPT_FILES` includes `agents/oracle.md`, `agents/analyst.md`, `agents/code-reviewer.md`, `agents/explore.md`, `agents/librarian.md`, `agents/metis.md`, `agents/momus.md`, `agents/multimodal-looker.md`, `agents/atlas.md`, `agents/build-error-resolver.md`, `agents/designer.md`, `agents/executor.md`, `agents/hephaestus.md`, `agents/prometheus.md`, `agents/qa-tester.md`, and `agents/writer.md`.
 
-### Step 4: 테스트
+### Step 4: Testing
 
 ```bash
 ./uninstall.sh && ./install.sh
 for f in ~/.kiro/agents/*.json; do python3 -c "import json; json.loads(open('$f').read()); print('OK: $f')"; done
-omk  # sisyphus로 시작되는지 확인
+omk  # verify it starts as sisyphus
 ./scripts/validate.sh
 ./tests/smoke-install.sh
 ```
 
 ---
 
-## 경로 시스템
+## Path System
 
-### 플레이스홀더 (install.sh가 치환)
+### Placeholders (substituted by install.sh)
 
-| 플레이스홀더 | 치환 값 |
+| Placeholder | Substituted Value |
 |-------------|---------|
 | `__OH_MY_KIRO_STEERING_GLOB__` | `file://$KIRO_HOME/steering/**/*.md` |
 | `__OH_MY_KIRO_HOOK_ROOT__` | `$KIRO_HOME/hooks/oh-my-kiro-cli` |
 
-### 상대 경로 (런타임 해석, `~/.kiro/agents/` 기준)
+### Relative paths (resolved at runtime, relative to `~/.kiro/agents/`)
 
-| 경로 패턴 | 실제 경로 |
+| Path Pattern | Actual Path |
 |-----------|----------|
 | `file://../prompts/X.md` | `~/.kiro/prompts/X.md` |
 | `file://../prompts/agents/X.md` | `~/.kiro/prompts/agents/X.md` |
 | `skill://../skills/**/SKILL.md` | `~/.kiro/skills/**/SKILL.md` |
 | `file://.kiro/steering/**/*.md` | `<workspace>/.kiro/steering/*.md` |
 
-### 기존 설정과의 공존
+### Coexistence with existing configurations
 
-`~/.kiro/`는 Kiro IDE와 CLI가 공유. oh-my-kiro-cli는 자기가 관리하는 파일명만 덮어쓰고 나머지 보존. `settings/cli.json`은 deep merge.
+`~/.kiro/` is shared between Kiro IDE and CLI. oh-my-kiro-cli only overwrites the filenames it manages and preserves the rest. `settings/cli.json` is deep-merged.
 
 ---
 
-## Kiro CLI 고유 사항
+## Kiro CLI-Specific Items
 
-| 파일 | 용도 |
+| File | Purpose |
 |------|------|
-| `agents/sisyphus.json` | 오케스트레이터. 도구 3개만 (subagent, thinking, todo). CLAUDE.md 역할. |
-| `prompts/sisyphus-system.md` | sisyphus 시스템 프롬프트. use_subagent 필수 절차 포함. |
-| `custom_settings/kiro-builtin-tools.md` | Kiro CLI 빌트인 도구 레퍼런스 (subagent, thinking, todo, delegate 등) |
+| `agents/sisyphus.json` | Orchestrator. Only 3 tools (subagent, thinking, todo). Plays the CLAUDE.md role. |
+| `prompts/sisyphus-system.md` | sisyphus system prompt. Includes the required use_subagent procedure. |
+| `custom_settings/kiro-builtin-tools.md` | Kiro CLI builtin tool reference (subagent, thinking, todo, delegate, etc.) |
 | `settings/cli.json` | `chat.defaultAgent: "sisyphus"` |
-| alias `omk` | `kiro-cli --agent sisyphus` (install.sh가 자동 추가) |
+| alias `omk` | `kiro-cli --agent sisyphus` (auto-added by install.sh) |
 
 ---
 
-## 버전 히스토리
+## Version History
 
-| 날짜 | 기반 버전 | 변경 사항 |
+| Date | Base Version | Changes |
 |------|----------|-----------|
-| 2026-03-25 | oh-my-settings v3.10.0 | 초기 Full 마이그레이션: 17 에이전트, 12 스킬, 9 프롬프트, 8 훅, 9 steering |
-| 2026-03-25 | _(Kiro 적응)_ | 오케스트레이터 도구 제한 (subagent+thinking+todo), toolsSettings 추가 (rm deny, write allowedPaths), subagent trustedAgents 전체 확장 |
-| 2026-03-26 | oh-my-openagent v3.13.1 | 훅 전면 정비: 신규 2개 (empty-subagent-response-detector, delegate-retry-guidance), 전 에이전트 훅 할당 완성 (17/17), 훅 총 8→10개 |
-| 2026-04-02 | first-wave complete | 16개 agent prompt 외부화, READ-ONLY destructive blocker, execution secret detector, librarian `web_search`/`web_fetch` pilot, 25 prompt / 12 hook 상태 정착, MCP ownership fix |
+| 2026-03-25 | oh-my-settings v3.10.0 | Initial full migration: 17 agents, 12 skills, 9 prompts, 8 hooks, 9 steering |
+| 2026-03-25 | _(Kiro adaptation)_ | Orchestrator tool restriction (subagent+thinking+todo), toolsSettings added (rm deny, write allowedPaths), subagent trustedAgents expanded to full list |
+| 2026-03-26 | oh-my-openagent v3.13.1 | Full hook overhaul: 2 new (empty-subagent-response-detector, delegate-retry-guidance), complete hook assignment for all agents (17/17), total hooks 8→10 |
+| 2026-04-02 | first-wave complete | Externalized 16 agent prompts, READ-ONLY destructive blocker, executor secret detector, librarian `web_search`/`web_fetch` pilot, 25 prompts / 12 hooks settled, MCP ownership fix |
 
 ---
 
 ## LLM Quick Reference
 
 ```
-1. Claude 소스 읽기
-2. 에이전트 분류 결정 (오케스트레이터 / 실행자 / READ-ONLY)
-3. 분류별 변환 규칙에 따라 JSON 생성
-4. toolsSettings 설정 (write.allowedPaths, shell.deniedCommands, subagent.availableAgents)
-5. install.sh 배열 업데이트
-6. JSON 유효성 검증
-7. docs 동기화
+1. Read the Claude source
+2. Decide the agent category (Orchestrator / Executor / READ-ONLY)
+3. Generate JSON using the per-category conversion rules
+4. Configure toolsSettings (write.allowedPaths, shell.deniedCommands, subagent.availableAgents)
+5. Update the install.sh arrays
+6. Validate the JSON
+7. Sync the docs
 ```

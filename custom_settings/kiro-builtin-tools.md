@@ -1,68 +1,68 @@
 # Kiro CLI Built-in Tools Reference
 
-oh-my-openagent에는 없고 Kiro CLI에서 제공하는 빌트인 도구들의 레퍼런스.
-에이전트 JSON의 `tools`, `allowedTools`, `toolsSettings`에서 사용.
+Reference for built-in tools provided by Kiro CLI that are not available in oh-my-openagent.
+Used in the agent JSON fields `tools`, `allowedTools`, and `toolsSettings`.
 
-> 출처: https://kiro.dev/docs/cli/reference/built-in-tools/
-
----
-
-## 도구 목록
-
-### 기본 도구 (파일/검색/실행)
-
-| 도구명 | Canonical | 설명 |
-|--------|-----------|------|
-| `read` | `fs_read` | 파일/폴더/이미지 읽기 |
-| `write` | `fs_write` | 파일 생성/편집 |
-| `glob` | `glob` | 글로브 패턴 파일 탐색 (.gitignore 존중) |
-| `grep` | `grep` | 정규식 콘텐츠 검색 (.gitignore 존중) |
-| `shell` | `execute_bash` | Bash 명령 실행 |
-| `aws` | `use_aws` | AWS CLI 호출 |
-
-### 웹 도구
-
-| 도구명 | 설명 |
-|--------|------|
-| `web_search` | 웹 검색 |
-| `web_fetch` | URL 콘텐츠 가져오기 (selective/truncated/full 모드) |
-
-### 에이전트 도구
-
-| 도구명 | Canonical | 설명 |
-|--------|-----------|------|
-| `subagent` | `use_subagent` | 서브에이전트를 병렬 스폰 (최대 4개 동시) |
-| `delegate` | `delegate` | 백그라운드 에이전트에 태스크 위임 |
-
-### 추론/분석 도구 (experimental)
-
-| 도구명 | 설명 |
-|--------|------|
-| `thinking` | 복잡한 태스크를 atomic action으로 분해하는 내부 추론 |
-| `introspect` | Kiro CLI 자체 기능/문서에 대한 질의 |
-| `todo` | 멀티스텝 태스크 추적용 Todo 리스트 |
-| `knowledge` | 세션 간 지식 저장/검색 (시맨틱 검색) |
-
-### 기타
-
-| 도구명 | 설명 |
-|--------|------|
-| `code` | 코드 인텔리전스 (심볼 검색, LSP, AST-Grep) |
-| `report` | GitHub 이슈/피처 리퀘스트 생성 |
-| `session` | 현재 세션 설정 임시 오버라이드 |
+> Source: https://kiro.dev/docs/cli/reference/built-in-tools/
 
 ---
 
-## Subagent (use_subagent) 상세
+## Tool List
 
-서브에이전트는 다른 커스텀 에이전트를 병렬로 스폰하는 핵심 도구.
+### Core Tools (file/search/execution)
 
-### 기능
-- 최대 4개 서브에이전트 동시 실행
-- 각 서브에이전트는 독립 컨텍스트 (메인 컨텍스트 오염 없음)
-- 다른 에이전트 설정(모델/도구/권한)을 상속
-- 실행 상태 실시간 표시
-- 완료 시 도구 사용량/시간 요약
+| Tool | Canonical | Description |
+|------|-----------|-------------|
+| `read` | `fs_read` | Read files/folders/images |
+| `write` | `fs_write` | Create/edit files |
+| `glob` | `glob` | Glob-pattern file discovery (respects .gitignore) |
+| `grep` | `grep` | Regex content search (respects .gitignore) |
+| `shell` | `execute_bash` | Execute bash commands |
+| `aws` | `use_aws` | Call the AWS CLI |
+
+### Web Tools
+
+| Tool | Description |
+|------|-------------|
+| `web_search` | Web search |
+| `web_fetch` | Fetch URL content (selective/truncated/full modes) |
+
+### Agent Tools
+
+| Tool | Canonical | Description |
+|------|-----------|-------------|
+| `subagent` | `use_subagent` | Spawn subagents in parallel (up to 4 concurrent) |
+| `delegate` | `delegate` | Delegate tasks to a background agent |
+
+### Reasoning/Analysis Tools (experimental)
+
+| Tool | Description |
+|------|-------------|
+| `thinking` | Internal reasoning that decomposes complex tasks into atomic actions |
+| `introspect` | Query Kiro CLI's own features/documentation |
+| `todo` | Todo list for tracking multi-step tasks |
+| `knowledge` | Cross-session knowledge storage/retrieval (semantic search) |
+
+### Other
+
+| Tool | Description |
+|------|-------------|
+| `code` | Code intelligence (symbol search, LSP, AST-Grep) |
+| `report` | Create a GitHub issue/feature request |
+| `session` | Temporarily override current session settings |
+
+---
+
+## Subagent (use_subagent) Details
+
+Subagent is the core tool for spawning other custom agents in parallel.
+
+### Capabilities
+- Up to 4 subagents running concurrently
+- Each subagent has an independent context (no main-context pollution)
+- Inherits other agent settings (model/tools/permissions)
+- Live execution status display
+- Tool usage / time summary on completion
 
 ### toolsSettings
 
@@ -77,20 +77,20 @@ oh-my-openagent에는 없고 Kiro CLI에서 제공하는 빌트인 도구들의 
 }
 ```
 
-| 설정 | 타입 | 설명 |
-|------|------|------|
-| `availableAgents` | `string[]` | 서브에이전트로 스폰 가능한 에이전트 제한. 글로브 패턴 지원 (`docs-*`) |
-| `trustedAgents` | `string[]` | 권한 확인 없이 바로 실행 가능한 에이전트. 글로브 패턴 지원 |
+| Setting | Type | Description |
+|---------|------|-------------|
+| `availableAgents` | `string[]` | Restrict which agents can be spawned as subagents. Supports glob patterns (`docs-*`) |
+| `trustedAgents` | `string[]` | Agents that can run without a permission prompt. Supports glob patterns |
 
 ---
 
-## Thinking 상세
+## Thinking Details
 
-복잡한 태스크를 수행할 때 내부적으로 단계를 분해해서 추론하는 도구.
+A tool that decomposes steps internally and reasons through complex tasks.
 
-- Experimental 기능
-- 별도 설정 없음
-- `tools`와 `allowedTools`에 `"thinking"` 추가하면 활성화
+- Experimental feature
+- No additional configuration
+- Enabled by adding `"thinking"` to `tools` and `allowedTools`
 
 ---
 
@@ -109,12 +109,12 @@ oh-my-openagent에는 없고 Kiro CLI에서 제공하는 빌트인 도구들의 
 }
 ```
 
-| 설정 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `allowedCommands` | `string[]` | `[]` | 확인 없이 실행 가능한 명령 (regex) |
-| `deniedCommands` | `string[]` | `[]` | 차단할 명령 (regex). allow보다 우선 |
-| `autoAllowReadonly` | `boolean` | `false` | 읽기 전용 명령 자동 허용 |
-| `denyByDefault` | `boolean` | `false` | allowedCommands 외 모든 명령 거부 |
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `allowedCommands` | `string[]` | `[]` | Commands that run without a prompt (regex) |
+| `deniedCommands` | `string[]` | `[]` | Commands to block (regex). Takes precedence over allow |
+| `autoAllowReadonly` | `boolean` | `false` | Automatically allow read-only commands |
+| `denyByDefault` | `boolean` | `false` | Deny every command not in allowedCommands |
 
 ---
 
@@ -158,10 +158,10 @@ oh-my-openagent에는 없고 Kiro CLI에서 제공하는 빌트인 도구들의 
 }
 ```
 
-| 설정 | 타입 | 설명 |
-|------|------|------|
-| `trusted` | `string[]` (regex) | 확인 없이 접근 가능한 URL 패턴 |
-| `blocked` | `string[]` (regex) | 차단할 URL 패턴 (trusted보다 우선) |
+| Setting | Type | Description |
+|---------|------|-------------|
+| `trusted` | `string[]` (regex) | URL patterns that can be accessed without a prompt |
+| `blocked` | `string[]` (regex) | URL patterns to block (takes precedence over trusted) |
 
 ---
 
@@ -181,15 +181,15 @@ oh-my-openagent에는 없고 Kiro CLI에서 제공하는 빌트인 도구들의 
 
 ---
 
-## 에이전트별 권장 도구 구성
+## Recommended Tool Configuration per Agent
 
-| 에이전트 역할 | tools | allowedTools 추가 | toolsSettings |
-|-------------|-------|-------------------|---------------|
-| 오케스트레이터 (`sisyphus`, `atlas`) | `subagent`, `thinking`, `todo` | 없음 | `subagent.availableAgents`, `trustedAgents` 설정 |
-| 계획 (`prometheus`) | `read`, `glob`, `grep`, `shell` | `subagent`, `thinking`, `use_subagent` | READ-ONLY shell 정책 + subagent post hooks |
-| 실행 (`executor`, `designer`, `qa-tester`, `build-error-resolver`, `writer`) | `["*"]` | 역할별 추가 도구만 최소화 | `write.allowedPaths`, `shell.autoAllowReadonly`, `deniedCommands` |
-| Deep Worker (`hephaestus`) | `["*"]` | `@sequential-thinking`, `@memory`, `@context7`, `@builtin` | 실행자와 동일한 write/shell 정책 |
-| READ-ONLY (`oracle`, `analyst`, `code-reviewer`, `explore`, `metis`, `momus`, `multimodal-looker`) | `read`, `glob`, `grep`, `shell` | 필요 시 memory/context7 계열만 | destructive shell pre-hook |
+| Agent Role | tools | Additional allowedTools | toolsSettings |
+|------------|-------|-------------------------|---------------|
+| Orchestrator (`sisyphus`, `atlas`) | `subagent`, `thinking`, `todo` | none | configure `subagent.availableAgents`, `trustedAgents` |
+| Planning (`prometheus`) | `read`, `glob`, `grep`, `shell` | `subagent`, `thinking`, `use_subagent` | READ-ONLY shell policy + subagent post hooks |
+| Execution (`executor`, `designer`, `qa-tester`, `build-error-resolver`, `writer`) | `["*"]` | keep role-specific additions minimal | `write.allowedPaths`, `shell.autoAllowReadonly`, `deniedCommands` |
+| Deep Worker (`hephaestus`) | `["*"]` | `@sequential-thinking`, `@memory`, `@context7`, `@builtin` | same write/shell policy as execution agents |
+| READ-ONLY (`oracle`, `analyst`, `code-reviewer`, `explore`, `metis`, `momus`, `multimodal-looker`) | `read`, `glob`, `grep`, `shell` | memory/context7 family only if needed | destructive shell pre-hook |
 | Specialist READ-ONLY (`librarian`) | `read`, `glob`, `grep`, `shell`, `web_search`, `web_fetch` | `@sequential-thinking`, `@memory`, `@context7` | destructive shell pre-hook |
 
-현재 repo는 broad tool expansion보다 역할 경계 보존을 우선한다. 특히 오케스트레이터에 `read`/`write`/`shell`을 다시 추가하지 않는다.
+The current repo prioritizes preserving role boundaries over broad tool expansion. In particular, do not add `read`/`write`/`shell` back to orchestrators.
