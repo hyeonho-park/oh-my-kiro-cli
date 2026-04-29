@@ -46,7 +46,7 @@ allowed_root_files = {
     "TODO.md",
 }
 
-if relative in allowed_root_files or relative.startswith("docs/") or relative.startswith("tmp/") or relative.startswith(".kiro/"):
+if relative in allowed_root_files or relative.startswith("docs/") or relative.startswith("tmp/") or relative.startswith(".kiro/") or relative.startswith("kiro-cli/steering/"):
     sys.exit(0)
 
 sys.stderr.write("Markdown files must live in docs/, tmp/, .kiro/, or the approved root filenames.\n")

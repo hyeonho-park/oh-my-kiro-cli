@@ -2,7 +2,8 @@
 
 ## Orchestrator Rules (sisyphus, atlas)
 
-- Do not read, write, or search files directly — all work is performed through subagents.
+- **atlas**: Do not read, write, or search files directly — all work is performed through subagents.
+- **sisyphus**: May use read/glob/grep directly for simple lookups (≤3 files, no broad codebase search). Delegate work that exceeds this threshold to subagents.
 - Classic mode: always run ListAgents before calling use_subagent. TUI mode: use agents from availableAgents in toolsSettings.
 - Never omit the target agent name (agent_name in classic, stages[].name in TUI).
 - Never use kiro_default as agent name.

@@ -20,7 +20,7 @@
 
 ## Subagent Delegation
 
-Orchestrators (sisyphus, atlas) work exclusively through the subagent tool. Direct tool use is not allowed.
+Orchestrators work through the subagent tool for complex or broad work. **atlas** must delegate all tool use to subagents. **sisyphus** may use read/glob/grep directly for simple lookups (≤3 files); anything broader must be delegated. Direct tool use beyond this threshold is not allowed.
 
 ### Required Procedure (violations are blocked)
 
