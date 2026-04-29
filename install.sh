@@ -7,6 +7,8 @@ KIRO_HOME="${KIRO_HOME:-${HOME}/.kiro}"
 INSTALL_HOOK_ROOT="${KIRO_HOME}/hooks/oh-my-kiro-cli"
 BACKUP_DIR="${KIRO_HOME}/backups/oh-my-kiro-cli-$(date +%Y%m%d-%H%M%S)"
 META_FILE="${KIRO_HOME}/.oh-my-kiro-cli-meta"
+PROJECT_ROOT="${SCRIPT_DIR}"
+PROJECT_SHA="$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || echo '')"
 
 AGENTS=(sisyphus oracle prometheus metis momus analyst hephaestus atlas executor designer qa-tester build-error-resolver code-reviewer librarian multimodal-looker explore writer)
 STEERING_FILES=(AGENTS.md workflow.md delegation.md constraints.md verification.md coding-style.md git-workflow.md testing.md patterns.md)
@@ -99,6 +101,21 @@ target_path.write_text(json.dumps(target, indent=2) + "\n")
 PY
 }
 
+if [ -f "$META_FILE" ]; then
+  prev_root="$(grep '^project_root=' "$META_FILE" | cut -d= -f2- || true)"
+  if [ -n "$prev_root" ] && [ "$prev_root" != "$PROJECT_ROOT" ]; then
+    warn "Previous installation was from '$prev_root'"
+    warn "Current project path is  '$PROJECT_ROOT'"
+    warn "Existing symlinks point to the OLD path and will be recreated."
+    if [ -t 0 ] && [ -z "${KIRO_NONINTERACTIVE:-}" ]; then
+      warn "Press Ctrl+C within 5s to abort, or wait to continue."
+      sleep 5
+    else
+      warn "Non-interactive mode detected; continuing without pause."
+    fi
+  fi
+fi
+
 mkdir -p "$KIRO_HOME/agents" "$KIRO_HOME/steering" "$KIRO_HOME/prompts" "$KIRO_HOME/skills" "$KIRO_HOME/settings" "$KIRO_HOME/hooks" "$KIRO_HOME/backups"
 log "Backing up conflicting files to ${BACKUP_DIR}"
 
@@ -129,13 +146,24 @@ for skill in "${SKILLS[@]}"; do
     warn "[skip] ${skill}: source not found"
     continue
   fi
+  if [ -L "$skill_target_dir" ] && [ ! -e "$skill_target_dir" ]; then
+    log "[cleanup] ${skill}: dangling symlink removed"
+    rm "$skill_target_dir"
+  fi
   if [ -L "$skill_target_dir" ] && [ "$(readlink "$skill_target_dir")" = "$skill_source_dir" ]; then
     log "[keep] ${skill}: symlink up to date"
     continue
   fi
+  if [ -d "$skill_target_dir" ] && [ ! -L "$skill_target_dir" ]; then
+    if [ -f "$skill_target_dir/SKILL.md" ] && [ -f "$skill_source_dir/SKILL.md" ] && \
+       ! cmp -s "$skill_target_dir/SKILL.md" "$skill_source_dir/SKILL.md"; then
+      warn "[diff] ${skill}: existing copy differs from project source; backing up before replace"
+    fi
+  fi
+  [ -n "$skill_target_dir" ] || { warn "[skip] empty target path"; continue; }
   backup_path "$skill_target_dir" "skills/${skill}"
-  mkdir -p "$skill_target_dir"
-  rsync -a --exclude='__pycache__' "$skill_source_dir/" "$skill_target_dir/"
+  rm -rf "$skill_target_dir"
+  ln -s "$skill_source_dir" "$skill_target_dir"
 done
 log "Installed ${#SKILLS[@]} skills"
 
@@ -144,17 +172,47 @@ CUSTOM_SKILL_COUNT=0
 if [ -d "$CUSTOM_SKILLS_DIR" ]; then
   for skill_source_dir in "$CUSTOM_SKILLS_DIR"/*/; do
     [ -d "$skill_source_dir" ] || continue
+    skill_source_dir="${skill_source_dir%/}"
     skill_name="$(basename "$skill_source_dir")"
     if [ -f "$skill_source_dir/SKILL.md" ]; then
       skill_target_dir="$KIRO_HOME/skills/${skill_name}"
+      if [ -L "$skill_target_dir" ] && [ ! -e "$skill_target_dir" ]; then
+        log "[cleanup] ${skill_name}: dangling symlink removed"
+        rm "$skill_target_dir"
+      fi
+      if [ -L "$skill_target_dir" ] && [ "$(readlink "$skill_target_dir")" = "$skill_source_dir" ]; then
+        log "[keep] ${skill_name}: symlink up to date"
+        CUSTOM_SKILL_COUNT=$((CUSTOM_SKILL_COUNT + 1))
+        continue
+      fi
+      if [ -d "$skill_target_dir" ] && [ ! -L "$skill_target_dir" ]; then
+        if [ -f "$skill_target_dir/SKILL.md" ] && \
+           ! cmp -s "$skill_target_dir/SKILL.md" "$skill_source_dir/SKILL.md"; then
+          warn "[diff] ${skill_name}: existing copy differs from project source; backing up before replace"
+        fi
+      fi
+      [ -n "$skill_target_dir" ] || { warn "[skip] empty target path"; continue; }
       backup_path "$skill_target_dir" "skills/${skill_name}"
-      mkdir -p "$skill_target_dir"
-      rsync -a --exclude='__pycache__' "$skill_source_dir/" "$skill_target_dir/"
+      rm -rf "$skill_target_dir"
+      ln -s "$skill_source_dir" "$skill_target_dir"
       CUSTOM_SKILL_COUNT=$((CUSTOM_SKILL_COUNT + 1))
     fi
   done
   log "Installed ${CUSTOM_SKILL_COUNT} custom skills"
 fi
+
+cat > "$KIRO_HOME/skills/README.md" <<EOF
+# oh-my-kiro-cli skills
+
+Install mode: symlink
+Project root: ${PROJECT_ROOT}
+
+⚠ These skill directories are SYMLINKS into the project above.
+Editing any file under \$KIRO_HOME/skills/<name>/ modifies the project source directly.
+
+To snapshot skills so edits are isolated, reinstall with:
+    ./install.sh --copy   # P2 (future support)
+EOF
 
 SCRIPTS_DIR="$SOURCE_ROOT/scripts"
 if [ -d "$SCRIPTS_DIR" ]; then
@@ -190,6 +248,9 @@ log "Installed hooks"
 
 cat > "$META_FILE" <<EOF
 installed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+project_root=${PROJECT_ROOT}
+project_sha=${PROJECT_SHA}
+install_mode=symlink
 backup_dir=${BACKUP_DIR}
 install_hook_root=${INSTALL_HOOK_ROOT}
 agents=${AGENTS[*]}

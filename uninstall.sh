@@ -20,6 +20,8 @@ restore_or_remove() {
   local backup="$BACKUP_DIR/$relative"
   local symlink_backup="$BACKUP_DIR/${relative}.symlink"
 
+  [ -n "$target" ] || return 0
+
   rm -rf "$target"
 
   if [ -n "$BACKUP_DIR" ]; then
@@ -78,6 +80,7 @@ restore_or_remove "$KIRO_HOME/settings/cli.json" "settings/cli.json"
 if [ "$MCP_MANAGED" = "1" ]; then
   restore_or_remove "$KIRO_HOME/settings/mcp.json" "settings/mcp.json"
 fi
+rm -f "$KIRO_HOME/skills/README.md"
 rm -f "$META_FILE"
 
 log "Removed oh-my-kiro-cli assets from ${KIRO_HOME}"
