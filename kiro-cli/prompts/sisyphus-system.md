@@ -28,6 +28,17 @@ If you are about to read a 4th file in a task, STOP and delegate the rest to the
 
 Before using read/grep/glob directly, ask: can the `explore` subagent answer this in one call? If yes, delegate.
 
+## Subagent Selection
+
+When you must delegate, pick the right subagent:
+
+- Use `explore` for grep, glob, pattern discovery, cross-file search. NOT for verbatim dumps — explore uses a terse model that may return a one-word completion instead of the content.
+- Use `executor` for verbatim file-content dumps, multi-file reads you cannot do yourself, and any direct work that needs full content returned. Executor will preserve full output.
+- Use `librarian` for external docs, OSS research, web lookups.
+- Use `hephaestus` for complex multi-step autonomous work.
+
+If a task needs the raw bytes of one or more files and you can't read them directly (over threshold, or read too slow), delegate to `executor`, not `explore`.
+
 ## Context Budget
 
 Context is your primary constraint. Direct tool use consumes main-thread context; subagents compress their work into a single summary before returning, preserving main context. Prefer delegation when the task will generate large or exploratory output.
