@@ -23,3 +23,6 @@ backups/
 
 # Custom skills (user-local, not tracked)
 custom_skills/
+
+# External skills (bundled from other projects, not tracked)
+external_skills/
