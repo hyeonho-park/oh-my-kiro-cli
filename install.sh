@@ -11,7 +11,7 @@ META_FILE="${KIRO_HOME}/.oh-my-kiro-cli-meta"
 AGENTS=(sisyphus oracle prometheus metis momus analyst hephaestus atlas executor designer qa-tester build-error-resolver code-reviewer librarian multimodal-looker explore writer)
 STEERING_FILES=(AGENTS.md workflow.md delegation.md constraints.md verification.md coding-style.md git-workflow.md testing.md patterns.md)
 PROMPT_FILES=(sisyphus-system.md planner.md start-work.md handoff.md code-review.md ralph-loop.md ulw-loop.md refactor.md build-fix.md agents/oracle.md agents/analyst.md agents/code-reviewer.md agents/explore.md agents/librarian.md agents/metis.md agents/momus.md agents/multimodal-looker.md agents/atlas.md agents/build-error-resolver.md agents/designer.md agents/executor.md agents/hephaestus.md agents/prometheus.md agents/qa-tester.md agents/writer.md)
-SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval skill-creator handoff)
+SKILLS=(orchestrate ultrawork ralph planner deepsearch git-master frontend-ui-ux playwright strategic-compact tdd-workflow verification-loop iterative-retrieval skill-creator handoff slack-to-jira slack-to-wiki briefing)
 
 log() { echo "[oh-my-kiro-cli] $1"; }
 warn() { echo "[oh-my-kiro-cli] WARNING: $1" >&2; }
@@ -130,6 +130,37 @@ for skill in "${SKILLS[@]}"; do
 done
 log "Installed ${#SKILLS[@]} skills"
 
+CUSTOM_SKILLS_DIR="${SCRIPT_DIR}/custom_skills"
+CUSTOM_SKILL_COUNT=0
+if [ -d "$CUSTOM_SKILLS_DIR" ]; then
+  for skill_source_dir in "$CUSTOM_SKILLS_DIR"/*/; do
+    [ -d "$skill_source_dir" ] || continue
+    skill_name="$(basename "$skill_source_dir")"
+    if [ -f "$skill_source_dir/SKILL.md" ]; then
+      skill_target_dir="$KIRO_HOME/skills/${skill_name}"
+      backup_path "$skill_target_dir" "skills/${skill_name}"
+      mkdir -p "$skill_target_dir"
+      rsync -a --exclude='__pycache__' "$skill_source_dir/" "$skill_target_dir/"
+      CUSTOM_SKILL_COUNT=$((CUSTOM_SKILL_COUNT + 1))
+    fi
+  done
+  log "Installed ${CUSTOM_SKILL_COUNT} custom skills"
+fi
+
+SCRIPTS_DIR="$SOURCE_ROOT/scripts"
+if [ -d "$SCRIPTS_DIR" ]; then
+  mkdir -p "$KIRO_HOME/scripts"
+  SCRIPT_COUNT=0
+  for script_file in "$SCRIPTS_DIR"/*; do
+    [ -f "$script_file" ] || continue
+    script_name="$(basename "$script_file")"
+    install_file "$script_file" "$KIRO_HOME/scripts/${script_name}" "scripts/${script_name}"
+    chmod +x "$KIRO_HOME/scripts/${script_name}"
+    SCRIPT_COUNT=$((SCRIPT_COUNT + 1))
+  done
+  log "Installed ${SCRIPT_COUNT} scripts"
+fi
+
 merge_cli_settings "$SOURCE_ROOT/settings/cli.json" "$KIRO_HOME/settings/cli.json" "settings/cli.json"
 log "Merged CLI settings"
 
@@ -156,6 +187,7 @@ agents=${AGENTS[*]}
 steering=${STEERING_FILES[*]}
 prompts=${PROMPT_FILES[*]}
 skills=${SKILLS[*]}
+custom_skills=$(cd "$CUSTOM_SKILLS_DIR" 2>/dev/null && ls -d */ 2>/dev/null | sed 's|/||' | tr '\n' ' ' || true)
 mcp_managed=${MCP_MANAGED}
 EOF
 
@@ -168,7 +200,7 @@ fi
 
 if [ -n "$SHELL_RC" ]; then
   if ! grep -q 'alias omk=' "$SHELL_RC" 2>/dev/null; then
-    printf '\nalias omk="kiro-cli --agent sisyphus --classic"\n' >> "$SHELL_RC"
+    printf '\nalias omk="kiro-cli --agent sisyphus"\n' >> "$SHELL_RC"
     log "Added 'omk' alias to ${SHELL_RC}"
   else
     log "Alias 'omk' already exists in ${SHELL_RC}"

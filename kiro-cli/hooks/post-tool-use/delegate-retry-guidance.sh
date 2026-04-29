@@ -36,7 +36,7 @@ ERROR_PATTERNS = [
     {
         "pattern": "not available to be used as SubAgent",
         "error_type": "unavailable_agent",
-        "fix": "Run ListAgents first, then use an agent_name from the available list. Never use kiro_default.",
+        "fix": "Run ListAgents first (classic) or check availableAgents (TUI), then specify a valid agent. Never use kiro_default.",
     },
     {
         "pattern": "Unknown agent",
@@ -46,7 +46,7 @@ ERROR_PATTERNS = [
     {
         "pattern": "Agent name cannot be empty",
         "error_type": "empty_agent",
-        "fix": "Provide a non-empty agent_name parameter.",
+        "fix": "Provide a non-empty agent_name (classic) or stages[].name (TUI).",
     },
     {
         "pattern": "denied list",
@@ -62,7 +62,7 @@ for ep in ERROR_PATTERNS:
             f"Error: {ep['error_type']}\n"
             f"Fix: {ep['fix']}\n"
             f"\n"
-            f"Action: Retry use_subagent NOW with corrected parameters.\n"
+            f"Action: Retry the subagent call NOW with corrected parameters.\n"
         )
         sys.exit(1)
 

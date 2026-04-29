@@ -16,11 +16,24 @@ if not isinstance(tool_input, dict):
 
 command = tool_input.get("command") or ""
 
-# ListAgents doesn't require agent_name or description
+# ListAgents doesn't require validation
 if command == "ListAgents":
     sys.exit(0)
 
-# InvokeSubagents: validate each subagent entry
+# --- TUI mode: subagent tool uses {task, stages} schema ---
+stages = tool_input.get("stages")
+if stages is not None:
+    if not isinstance(stages, list) or not stages:
+        sys.stderr.write("stages must be a non-empty array.\n")
+        sys.exit(2)
+    for i, stage in enumerate(stages):
+        name = (stage.get("name") or "").strip()
+        if not name:
+            sys.stderr.write(f"stages[{i}].name is missing or empty.\n")
+            sys.exit(2)
+    sys.exit(0)
+
+# --- Classic mode: InvokeSubagents uses {content: {subagents}} schema ---
 content = tool_input.get("content") or {}
 subagents = content.get("subagents") or []
 

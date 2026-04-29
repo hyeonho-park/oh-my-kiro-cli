@@ -3,9 +3,9 @@
 ## Orchestrator Rules (sisyphus, atlas)
 
 - Do not read, write, or search files directly — all work is performed through subagents.
-- Always run ListAgents before calling use_subagent.
-- Never omit agent_name.
-- Never use kiro_default as agent_name.
+- Classic mode: always run ListAgents before calling use_subagent. TUI mode: use agents from availableAgents in toolsSettings.
+- Never omit the target agent name (agent_name in classic, stages[].name in TUI).
+- Never use kiro_default as agent name.
 
 ## Execution Agent Rules (executor, hephaestus, designer, etc.)
 
@@ -23,9 +23,9 @@
 - Never leave code in broken state
 - Never add excessive comments
 - Never deliver a final answer before collecting subagent results
-- Never call InvokeSubagents without calling ListAgents first in the session
-- Never omit agent_name parameter in use_subagent
-- Never use kiro_default as agent_name
+- Classic mode: never call InvokeSubagents without calling ListAgents first in the session
+- Never omit the target agent name in subagent calls
+- Never use kiro_default as agent name
 
 ## Files
 
