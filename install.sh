@@ -120,13 +120,22 @@ done
 log "Installed ${#PROMPT_FILES[@]} prompts"
 
 for skill in "${SKILLS[@]}"; do
-  skill_source_dir="$SOURCE_ROOT/skills/${skill}"
   skill_target_dir="$KIRO_HOME/skills/${skill}"
-  if [ -f "$skill_source_dir/SKILL.md" ]; then
-    backup_path "$skill_target_dir" "skills/${skill}"
-    mkdir -p "$skill_target_dir"
-    rsync -a --exclude='__pycache__' "$skill_source_dir/" "$skill_target_dir/"
+  if [ -f "${SCRIPT_DIR}/custom_skills/${skill}/SKILL.md" ]; then
+    skill_source_dir="${SCRIPT_DIR}/custom_skills/${skill}"
+  elif [ -f "$SOURCE_ROOT/skills/${skill}/SKILL.md" ]; then
+    skill_source_dir="$SOURCE_ROOT/skills/${skill}"
+  else
+    warn "[skip] ${skill}: source not found"
+    continue
   fi
+  if [ -L "$skill_target_dir" ] && [ "$(readlink "$skill_target_dir")" = "$skill_source_dir" ]; then
+    log "[keep] ${skill}: symlink up to date"
+    continue
+  fi
+  backup_path "$skill_target_dir" "skills/${skill}"
+  mkdir -p "$skill_target_dir"
+  rsync -a --exclude='__pycache__' "$skill_source_dir/" "$skill_target_dir/"
 done
 log "Installed ${#SKILLS[@]} skills"
 
