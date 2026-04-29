@@ -200,7 +200,7 @@ fi
 
 if [ -n "$SHELL_RC" ]; then
   if ! grep -q 'alias omk=' "$SHELL_RC" 2>/dev/null; then
-    printf '\nalias omk="kiro-cli --agent sisyphus --classic"\n' >> "$SHELL_RC"
+    printf '\nalias omk="kiro-cli --agent sisyphus"\n' >> "$SHELL_RC"
     log "Added 'omk' alias to ${SHELL_RC}"
   else
     log "Alias 'omk' already exists in ${SHELL_RC}"
