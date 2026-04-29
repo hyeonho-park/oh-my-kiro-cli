@@ -18,20 +18,19 @@ payload = json.loads(os.environ["PAYLOAD"])
 tool_name = payload.get("tool_name", "")
 response = payload.get("tool_response")
 
-if tool_name not in {"grep", "glob", "read"}:
+if tool_name not in {"grep", "glob"}:
     sys.exit(0)
 
 count = 0
 if isinstance(response, list):
     count = len(response)
 elif isinstance(response, dict):
-    items = response.get("items")
+    items = response.get("result") or response.get("items")
     if isinstance(items, list):
         count = len(items)
 
-if count >= 20:
-    sys.stderr.write("Large search result set detected. Consider switching to a dedicated explore agent before continuing.\n")
-    sys.exit(1)
+if count >= 50:
+    sys.stderr.write(f"Search returned {count} results. Consider delegating to the `explore` subagent for large result sets to keep main context clean.\n")
 
 sys.exit(0)
 PY

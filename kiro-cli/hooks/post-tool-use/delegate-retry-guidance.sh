@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+# delegate-retry-guidance.sh — postToolUse hook for use_subagent
+#
+# Error type labels (canonical):
+#   unavailable_agent  — "not available to be used as SubAgent"
+#   unknown_agent      — "Unknown agent"
+#   empty_agent        — "Agent name cannot be empty"
+#   denied_agent       — "denied list"
+#
+# Retry cap: per (session_key, error_type). Cap = 2.
+#   count < 2  → increment, exit 1 (retry-now guidance to stderr)
+#   count >= 2 → exit 0 (surface to user, no more forced retries)
+#
+# session_key: $KIRO_SESSION_KEY env var, else pgid of this process.
+# State file:  ~/.kiro/state/oh-my-kiro-cli/delegate-retry-guidance/<session_key>.json
+#              JSON dict: { error_type: count }
+#
+# PF1=STDERR  PF3=pgid fallback
 set -euo pipefail
 
 payload="$(cat)"
@@ -7,7 +24,6 @@ PAYLOAD="$payload" python3 - <<'PY'
 import json
 import os
 import sys
-import re
 
 payload = json.loads(os.environ["PAYLOAD"])
 tool_name = payload.get("tool_name", "")
@@ -55,16 +71,54 @@ ERROR_PATTERNS = [
     },
 ]
 
+matched = None
 for ep in ERROR_PATTERNS:
     if ep["pattern"] in output:
-        sys.stderr.write(
-            f"[Subagent Delegation Failed — Retry Required]\n"
-            f"Error: {ep['error_type']}\n"
-            f"Fix: {ep['fix']}\n"
-            f"\n"
-            f"Action: Retry the subagent call NOW with corrected parameters.\n"
-        )
-        sys.exit(1)
+        matched = ep
+        break
 
-sys.exit(0)
+if not matched:
+    sys.exit(0)
+
+error_type = matched["error_type"]
+
+# Determine session key: env var or pgid fallback
+session_key = os.environ.get("KIRO_SESSION_ID") or str(os.getpgid(os.getppid()))
+
+state_dir = os.path.expanduser(
+    "~/.kiro/state/oh-my-kiro-cli/delegate-retry-guidance"
+)
+os.makedirs(state_dir, exist_ok=True)
+state_file = os.path.join(state_dir, f"{session_key}.json")
+
+# Load existing counts
+try:
+    with open(state_file) as f:
+        counts = json.load(f)
+except (FileNotFoundError, json.JSONDecodeError):
+    counts = {}
+
+count = counts.get(error_type, 0)
+
+if count >= 2:
+    sys.stderr.write(
+        f"Retry cap reached for {error_type} (2 attempts in this session). Surfacing to user.\n"
+    )
+    sys.exit(0)
+
+# Increment and persist (atomic write)
+counts[error_type] = count + 1
+tmp = state_file + ".tmp"
+with open(tmp, "w") as f:
+    json.dump(counts, f)
+os.replace(tmp, state_file)
+
+sys.stderr.write(
+    f"[Subagent Delegation Failed — Retry Required]\n"
+    f"Error: {error_type}\n"
+    f"Fix: {matched['fix']}\n"
+    f"\n"
+    f"Action: Retry the subagent call NOW with corrected parameters.\n"
+)
+sys.exit(1)
 PY
