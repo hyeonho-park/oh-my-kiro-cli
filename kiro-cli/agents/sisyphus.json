@@ -6,7 +6,10 @@
   "tools": [
     "subagent",
     "thinking",
-    "todo"
+    "todo",
+    "read",
+    "glob",
+    "grep"
   ],
   "allowedTools": [
     "subagent",
@@ -14,13 +17,15 @@
     "todo",
     "@sequential-thinking",
     "@memory",
-    "@context7"
+    "@context7",
+    "read",
+    "glob",
+    "grep"
   ],
   "resources": [
+    "skill://~/.kiro/skills/**/SKILL.md",
     "__OH_MY_KIRO_STEERING_GLOB__",
-    "file://.kiro/steering/**/*.md",
-    "skill://../skills/**/SKILL.md",
-    "skill://.kiro/skills/**/SKILL.md"
+    "file://.kiro/steering/**/*.md"
   ],
   "hooks": {
     "preToolUse": [

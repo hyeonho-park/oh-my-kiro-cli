@@ -23,6 +23,7 @@
     "@context7"
   ],
   "resources": [
+    "skill://~/.kiro/skills/**/SKILL.md",
     "__OH_MY_KIRO_STEERING_GLOB__",
     "file://.kiro/steering/**/*.md"
   ],
