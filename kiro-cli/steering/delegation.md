@@ -20,12 +20,12 @@
 
 ## Subagent Delegation
 
-Orchestrators (sisyphus, atlas) work exclusively through the `use_subagent` tool. Direct tool use is not allowed.
+Orchestrators (sisyphus, atlas) work exclusively through the subagent tool. Direct tool use is not allowed.
 
 ### Required Procedure (violations are blocked)
 
-1. **ListAgents first** — before the first subagent call in a session, always run ListAgents to confirm the available agents.
-2. **Specify agent_name** — only use names returned by ListAgents. Never omit it.
+1. **Know available agents** — classic mode: run ListAgents first. TUI mode: use agents from `toolsSettings.subagent.availableAgents`.
+2. **Specify the target agent** — classic: `agent_name` parameter. TUI: `stages[].name`. Never omit it.
 3. **No kiro_default** — falling back to the default agent is blocked.
 
 ### Delegation Patterns
@@ -85,7 +85,7 @@ Do NOT invent machine-readable XML, JSON envelopes, or fake protocol markers unl
 - Delegate to subagents in English — queries, task descriptions, and expected outcomes should be in English
 - Subagent responses are expected in English for consistency and token efficiency
 - Final user-facing responses remain in the user's language (Korean, etc.)
-- This applies to all agent-to-agent communication via use_subagent
+- This applies to all agent-to-agent communication via the subagent tool
 
 ## Deep Parallel Delegation
 
